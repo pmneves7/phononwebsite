@@ -55,10 +55,10 @@
 			<div id="homepage-panel">
 				<article class="homepage-content" id="homepage-content">
 <h1 id="phonon-website">Phonon website</h1>
-<h4 id="visualize-phonons-excitons-structures-and-isosurfaces">Visualize phonons, excitons, structures, and isosurfaces</h4>
+<h4 id="visualize-phonons-magnons-excitons-structures-and-isosurfaces">Visualize phonons, magnons, excitons, structures, and isosurfaces</h4>
 <p>This repository contains the web applications behind the phononwebsite project. It started as a phonon visualization tool and now also includes dedicated pages for exciton wavefunctions and crystal structures / charge-density isosurfaces.</p>
 <p>Project repository: <a href="https://github.com/henriquemiranda/phononwebsite" class="uri">https://github.com/henriquemiranda/phononwebsite</a></p>
-<p>The phonon viewer lets you inspect phonon dispersions and animate vibrational modes. The exciton viewer shows exciton wavefunctions on real-space grids. The structure viewer can display crystal structures, repetitions, and charge-density isosurfaces with either marching cubes or raymarch rendering.</p>
+<p>The phonon viewer lets you inspect phonon dispersions and animate vibrational modes. The magnon viewer displays spin modes exported from Sunny, SpinW, or Magnopy: click a dispersion branch to animate spin arrows on the crystal structure. The exciton viewer shows exciton wavefunctions on real-space grids. The structure viewer can display crystal structures, repetitions, and charge-density isosurfaces with either marching cubes or raymarch rendering.</p>
 <h1 id="how-to-use">How to use?</h1>
 <h2 id="phonons">Phonons</h2>
 <p>In the phonon section you can click any point in the dispersion and see an animation of the corresponding lattice vibration. The website can display built-in example datasets, contributed materials, Materials Project OpenData-derived phonons, and locally hosted converted datasets.</p>
@@ -92,6 +92,28 @@ In [2]: phbst.phbands.view_phononwebsite()</code></pre>
 <p>To read a VASP calculation you need the <code>vaspout.h5</code> file containing a phonon dispersion calculation. You can find the instructions of how to compute the phonon dispersion from a supercell calculation in the <a href="https://www.vasp.at/wiki/index.php/Computing_the_phonon_dispersion_and_DOS">VASP wiki</a></p>
 <pre><code>$ read_vasp_phonon.py vaspout.h5 &lt;name_of_your_material&gt;</code></pre>
 <p>You can then select the resulting <code>.json</code> file with the <code>Choose files</code> button.</p>
+<h2 id="magnons">Magnons</h2>
+<p>Open the <a href="magnon.html">magnon viewer</a>, choose an example, and click a dispersion branch to animate its spin motion. To view your own calculation, export a JSON file with one of the following tools and load it in the viewer.</p>
+<p>The install commands below run from this repository’s root directory. Each exporter uses your solver’s modes and preserves its Hamiltonian conventions.</p>
+<h3 id="sunny"><a href="exporters/sunny/README.html">Sunny</a></h3>
+<p>Install once, then start Julia with <code>julia --project=exporters/sunny</code>:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">julia</span> <span class="at">--project</span><span class="op">=</span>exporters/sunny <span class="at">-e</span> <span class="st">&#39;using Pkg; Pkg.instantiate()&#39;</span></span></code></pre></div>
+<p>After creating your <code>SpinWaveTheory</code> (<code>swt</code>) and reciprocal-space <code>path</code>:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode julia"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Sunny</span>, <span class="bu">SunnyMagnonExport</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">export_magnons</span>(<span class="st">&quot;magnons.json&quot;</span>, swt, path)</span></code></pre></div>
+<p>The default units are meV and Å. For another unit system, pass the same Sunny <code>Units</code> object used in your model, e.g. <code>units=Units(:K, :angstrom)</code>.</p>
+<h3 id="spinw"><a href="exporters/spinw/README.html">SpinW</a></h3>
+<p>With SpinW installed, add the exporter to your MATLAB path. After defining your <code>model</code> and ordered spins:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="va">addpath</span>(<span class="ss">&#39;/path/to/phononwebsite/exporters/spinw&#39;</span>)<span class="op">;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="va">export_magnons</span>(<span class="ss">&#39;magnons.json&#39;</span><span class="op">,</span> <span class="va">model</span><span class="op">,</span> {[<span class="fl">0</span> <span class="fl">0</span> <span class="fl">0</span>] [<span class="fl">0.5</span> <span class="fl">0</span> <span class="fl">0</span>] [<span class="fl">1</span> <span class="fl">0</span> <span class="fl">0</span>] <span class="fl">101</span>})<span class="op">;</span></span></code></pre></div>
+<p>The path uses SpinW’s usual cell-array format or a 3 × N array of q points. Use SpinW’s standard meV and Å units.</p>
+<h3 id="magnopy"><a href="exporters/magnopy/README.html">Magnopy</a></h3>
+<p>Install the Python exporter:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pip install ./exporters/magnopy</span></code></pre></div>
+<p>After creating your <code>spinham</code>, <code>lswt</code>, and N × 3 array of <code>qpoints</code>:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> magnopy_magnon_export <span class="im">import</span> export_magnons</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>export_magnons(<span class="st">&quot;magnons.json&quot;</span>, spinham, lswt, qpoints, relative<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
+<p><code>relative=True</code> uses reciprocal lattice units of the magnetic cell. To reuse previously calculated <code>diagonalize</code> results in meV, also pass <code>modes=modes</code>. Cell lengths are assumed to be Å.</p>
 <h1 id="pages-using-this-visualization-tool">Pages using this visualization tool</h1>
 <p>This visualization tool is currently also used in:</p>
 <ul>
@@ -140,8 +162,11 @@ line_breaks:      list of tuples with start and end of each segment (Optional)</
 <li><code>test/</code>: JavaScript tests and fixtures</li>
 <li><code>python/phononweb/</code>: Python package and CLI scripts</li>
 <li><code>python/phononweb/tests/</code>: Python test suite</li>
+<li><code>exporters/</code>: optional Sunny, SpinW, and Magnopy adapters, examples, and solver tests</li>
+<li><code>doc/magnons/</code>: magnon usage, format, and validation guides</li>
 <li><code>build/</code>: generated deploy output</li>
 <li><code>data/localdb/</code>, <code>data/contribdb/</code>, <code>data/mpdb/</code>: runtime material databases</li>
+<li><code>data/magnons/</code>: small exported examples; no solver is needed to view them</li>
 <li><code>.github/workflows/</code>: CI and deploy workflows</li>
 </ul>
 <h2 id="conventions">Conventions</h2>
@@ -150,6 +175,7 @@ line_breaks:      list of tuples with start and end of each segment (Optional)</
 <li>add JavaScript tests in <code>test/</code> as <code>*.test.mjs</code></li>
 <li>put reusable test data in <code>test/fixtures/</code></li>
 <li>add website Python utilities in <code>python/phononweb/</code> and tests in <code>python/phononweb/tests/</code></li>
+<li>keep optional solver adapters and their tests under <code>exporters/&lt;solver&gt;/</code></li>
 <li>keep generated files out of source folders</li>
 <li>if you move files, update the matching scripts and workflow paths in the same change</li>
 </ul>
@@ -164,6 +190,7 @@ python3 -m http.server</code></pre>
 <p>Then open one of:</p>
 <ul>
 <li><a href="http://localhost:8000/phonon.html" class="uri">http://localhost:8000/phonon.html</a></li>
+<li><a href="http://localhost:8000/magnon.html" class="uri">http://localhost:8000/magnon.html</a></li>
 <li><a href="http://localhost:8000/exciton.html" class="uri">http://localhost:8000/exciton.html</a></li>
 <li><a href="http://localhost:8000/structure.html" class="uri">http://localhost:8000/structure.html</a></li>
 <li><a href="http://localhost:8000/index.html" class="uri">http://localhost:8000/index.html</a></li>
