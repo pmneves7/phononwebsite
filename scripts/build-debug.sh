@@ -24,4 +24,5 @@ cp build/structure.js build/structure.min.js
 mkdir -p build/doc
 cp -r doc/magnons build/doc/
 cp -r exporters build/
+python3 python/phononweb/scripts/render_magnon_docs.py --output build
 cp build/magnon.js build/magnon.min.js

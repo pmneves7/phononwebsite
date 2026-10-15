@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
+import { JSDOM } from 'jsdom';
 
 function read(relPath) {
   const absPath = path.join(process.cwd(), relPath);
@@ -59,6 +60,53 @@ describe('Build smoke tests', () => {
     for (const example of examples) assert.ok(fs.existsSync(path.join('build', example.file)));
     for (const file of ['doc/magnons/FORMAT.md', 'exporters/sunny/README.md', 'exporters/spinw/README.md']) {
       assert.ok(fs.existsSync(path.join('build', file)), `Missing magnon guide: ${file}`);
+    }
+  });
+
+  it('serves readable magnon export guides with working local navigation', () => {
+    const buildRoot = path.resolve('build');
+    const site = 'https://magnon-docs.test/';
+    const documents = new Map();
+    const document = file => {
+      if (!documents.has(file)) documents.set(file, JSDOM.fragment(read(`build/${file}`)));
+      return documents.get(file);
+    };
+    const checkLink = (file, href) => {
+      const target = new URL(href, new URL(file, site));
+      if (target.origin !== new URL(site).origin) return;
+      const relative = decodeURIComponent(target.pathname).slice(1);
+      const absolute = path.resolve(buildRoot, relative);
+      assert.ok(absolute.startsWith(`${buildRoot}${path.sep}`), `${file}: link escapes build: ${href}`);
+      assert.ok(fs.existsSync(absolute), `${file}: missing link target: ${href}`);
+      if (target.hash) {
+        assert.ok(document(relative).getElementById(decodeURIComponent(target.hash.slice(1))),
+          `${file}: missing link fragment: ${href}`);
+      }
+    };
+
+    const viewer = document('magnon.html');
+    const guideLink = [...viewer.querySelectorAll('a[href]')].find(a => a.textContent === 'Export guide');
+    assert.equal(guideLink?.getAttribute('href'), 'doc/magnons/README.html#export-a-calculation');
+    checkLink('magnon.html', guideLink.getAttribute('href'));
+
+    for (const solver of ['sunny', 'spinw']) {
+      const guide = document(`exporters/${solver}/README.html`);
+      assert.match(guide.querySelector('h1')?.textContent || '', new RegExp(solver, 'i'));
+      assert.ok([...guide.querySelectorAll('pre code')].some(code => code.textContent.includes('export_magnons(')),
+        `${solver}: missing rendered export example`);
+    }
+    for (const directory of ['doc/magnons', 'exporters/sunny', 'exporters/spinw']) {
+      for (const source of fs.readdirSync(directory).filter(file => file.endsWith('.md'))) {
+        const file = `${directory}/${source.replace(/\.md$/, '.html')}`;
+        for (const link of document(file).querySelectorAll('[href]')) checkLink(file, link.getAttribute('href'));
+      }
+    }
+    const homeLinks = [...document('index.html').querySelectorAll('a[href]')]
+      .filter(link => /^(doc\/magnons|exporters\/(sunny|spinw))\//.test(link.getAttribute('href')));
+    assert.ok(homeLinks.length >= 3, 'Homepage must link to the magnon and both exporter guides');
+    for (const link of homeLinks) {
+      assert.match(link.getAttribute('href'), /\.html(?:[?#]|$)/);
+      checkLink('index.html', link.getAttribute('href'));
     }
   });
 

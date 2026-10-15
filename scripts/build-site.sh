@@ -30,5 +30,6 @@ test -f build/structure.min.js
 mkdir -p build/doc
 cp -r doc/magnons build/doc/
 cp -r exporters build/
+python3 python/phononweb/scripts/render_magnon_docs.py --output build
 terser build/magnon.js -c -m --source-map "content=build/magnon.js.map,url=magnon.min.js.map" -o build/magnon.min.js
 test -f build/magnon.min.js
