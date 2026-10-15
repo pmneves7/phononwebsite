@@ -20,14 +20,6 @@
     "file": "data/magnons/sunny-dipole.json"
   },
   {
-    "file": "data/magnons/spinw-sw01-ferromagnetic-chain.json",
-    "name": "Ferromagnetic chain · SpinW"
-  },
-  {
-    "file": "data/magnons/spinw-sw02-antiferromagnetic-chain.json",
-    "name": "Antiferromagnetic chain · SpinW"
-  },
-  {
     "file": "data/magnons/spinw-sw07-kagome.json",
     "name": "Kagome antiferromagnet · SpinW"
   },
