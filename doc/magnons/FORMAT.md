@@ -47,7 +47,9 @@ allowed. Labels at the same path coordinate are combined.
 
 Recommended metadata include producer, producer version, exporter version,
 normalization, source tutorial URL, and the original `input_qpoints` as a `Q × 3`
-array. Native input q-points are displayed when supplied. They do not control
+array. Optional `input_qpoint_units` labels those displayed coordinates (default:
+`input RLU`); Magnopy can also supply Cartesian reciprocal coordinates.
+Native input q-points are displayed when supplied. They do not control
 the animation: only the canonical `qpoints` do.
 
 ## Reconstruction and normalization
@@ -88,6 +90,8 @@ choices, and ground-state optimization to the originating solver. They convert
 units and representations only. The SpinW adapter accounts for its opposite
 native momentum sign while keeping its original input coordinates in metadata.
 The Sunny adapter uses its own magnetic-cell conversion and native local frames.
+The Magnopy adapter translates native `LSWT.diagonalize` transformations using
+Magnopy's local spin frames; it accepts precomputed results and adds no solver.
 Each adapter's README specifies its supported versions and native conventions.
 
 Version 1 does not encode multiple domains, incommensurate rotating frames,

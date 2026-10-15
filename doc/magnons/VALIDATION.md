@@ -87,3 +87,33 @@ Individual eigenvectors at degeneracies and their overall phase are not unique.
 See the [Sunny details](../../exporters/sunny/VALIDATION.md),
 [SpinW conventions/tests](../../exporters/spinw/README.md), and
 [review guide](REVIEW.md).
+
+## Magnopy extension and integration review
+
+Also executed on 2026-10-15, with Magnopy 0.6.1 / Python 3.12.0:
+
+- Installed the new optional Python exporter from its `pyproject.toml`, ran
+  **37 passing tests**, and regenerated all three examples through the installed
+  package. The tests cover every mode at all **163 q points**, native energy
+  and eigen-equation agreement, complex Sunny covariance comparisons, elliptical
+  polarization, DMI momentum sign, and export without recalculation.
+- Parsed the three freshly regenerated datasets with the production viewer
+  parser and evaluated **1,144** finite spin/phase samples. These are Magnopy
+  model examples, not DFT validation. See the [Magnopy validation details](../../exporters/magnopy/VALIDATION.md)
+  for exact sources and the native exact-degeneracy limitation.
+- Both debug and production builds succeeded. The full JavaScript suite passed:
+  **99 passed, 3 optional checks skipped, 0 failed**. Guide links for all three
+  exporters and exclusion of local Python build/cache artifacts are covered.
+- In the desktop browser, loaded all three Magnopy examples, selected the AFM's
+  second branch, and checked centered arrows and tip paths. Verified the guide
+  navigation and rendered Magnopy documentation. A 650 px viewport uses the same
+  single-column appearance controls as the phonon page; the viewport was then
+  restored. The graphene phonon page still rendered after sharing the GIF helper.
+  No console errors were observed during these checks.
+
+The final project-fit review retained the existing page layout, shared controls,
+Three.js/Highcharts rendering, and build tools. It removed a duplicated GIF
+helper, corrected a mobile CSS override, and excluded local solver caches from
+the deployed site. No browser runtime dependency or JSON version change was
+needed. Native Sunny/SpinW calculations were not rerun for this extension;
+their saved fixtures and JavaScript regressions were included in the checks.

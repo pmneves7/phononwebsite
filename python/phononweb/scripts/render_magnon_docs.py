@@ -6,6 +6,7 @@ import html
 import os
 from pathlib import Path
 import re
+import shutil
 from urllib.parse import urlsplit, urlunsplit
 
 from render_homepage import render_markdown
@@ -54,6 +55,7 @@ def render_page(source, sources):
             <a href="{prefix}doc/magnons/README.html">Viewer guide</a>
             <a href="{prefix}exporters/sunny/README.html">Sunny exporter</a>
             <a href="{prefix}exporters/spinw/README.html">SpinW exporter</a>
+            <a href="{prefix}exporters/magnopy/README.html">Magnopy exporter</a>
         </nav>
         {content}
     </main>
@@ -66,7 +68,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', default='build', help='Built website directory')
     output = Path(parser.parse_args().output).resolve()
-    sources = {p.resolve() for directory in ['doc/magnons', 'exporters/sunny', 'exporters/spinw']
+    # Ship downloadable sources, not local solver installations or test caches.
+    ignore = shutil.ignore_patterns('__pycache__', '.pytest_cache', '*.egg-info',
+                                   'build', 'dist', '.venv', '.git', '.DS_Store', 'Manifest.toml')
+    for directory in ['doc/magnons', 'exporters']:
+        shutil.copytree(ROOT / directory, output / directory, dirs_exist_ok=True, ignore=ignore)
+    sources = {p.resolve() for directory in ['doc/magnons', 'exporters/sunny', 'exporters/spinw', 'exporters/magnopy']
                for p in (ROOT / directory).glob('*.md')}
     for source in sorted(sources):
         destination = output / source.relative_to(ROOT).with_suffix('.html')

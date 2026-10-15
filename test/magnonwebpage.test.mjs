@@ -35,6 +35,14 @@ describe('Magnon controls', () => {
         assert.equal($('#load-status').attr('role'), 'alert');
     });
 
+    it('shows Cartesian input units instead of mislabeling them as RLU', () => {
+        const { page, $ } = setup();
+        page.data.metadata.input_qpoint_units = 'radians / input length unit';
+        page.selectModeByBandIndex(1, 0);
+        assert.match($('#selected-mode').text(), /0.25, 0, 0.*radians \/ input length unit/);
+        assert.ok(!$('#selected-mode').text().includes('RLU'));
+    });
+
     it('retains the previous data and reports malformed uploads', async () => {
         const { page, $ } = setup();
         const original = page.data;

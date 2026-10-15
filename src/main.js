@@ -5,6 +5,7 @@ import jsyaml from 'js-yaml';
 import Detector from '../libs/Detector.js';
 import '../libs/CCapture.js';
 import GIFLib from '../libs/gif.js';
+import { resolveGifConstructor } from './viewercapture.js';
 import { Complex } from './legacycomplex.js';
 
 // Import your own classes (adjust the path as needed)
@@ -12,19 +13,6 @@ import { VibCrystal, PhononHighcharts, PhononWebpage } from './phononwebsite.js'
 
 if (THREE.ColorManagement && typeof THREE.ColorManagement.enabled === 'boolean') {
     THREE.ColorManagement.enabled = false;
-}
-
-function resolveGifConstructor(mod) {
-    if (typeof mod === 'function') {
-        return mod;
-    }
-    if (mod && typeof mod.default === 'function') {
-        return mod.default;
-    }
-    if (mod && typeof mod.GIF === 'function') {
-        return mod.GIF;
-    }
-    return null;
 }
 
 // Keep legacy globals available for modules still using the old global style.

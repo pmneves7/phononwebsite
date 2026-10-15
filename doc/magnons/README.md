@@ -8,7 +8,7 @@ phase slider to pause at a particular point in the cycle.
 The viewer shares the website's Three.js structure renderer, atom and bond
 geometry, camera controls, cell display, structure tables, and Highcharts
 dispersion selection. It adds a small spin-animation layer. Calculations remain
-in Sunny or SpinW; loading a file in the browser does not require either solver.
+in Sunny, SpinW, or Magnopy; loading a file in the browser requires no solver.
 Local uploads are read in the browser and are not sent to a server.
 
 ## Appearance and movies
@@ -57,12 +57,14 @@ bundled encoder as the phonon viewer. All encoding happens locally.
   a one-call export from a `SpinWaveTheory` and reciprocal-space path.
 - [SpinW exporter](../../exporters/spinw/README.md): MATLAB functions with a
   one-call export from a configured SpinW model and path.
+- [Magnopy exporter](../../exporters/magnopy/README.md): a small Python package
+  exporting native `LSWT.diagonalize` results, including precomputed modes.
 - [JSON format and conventions](FORMAT.md): the shared, versioned data contract.
 
 Each exporter preserves the solver's Hamiltonian, chosen ground state, and
 anisotropy conventions. In particular, the Sunny adapter does not undo Stevens
 operator or interaction renormalization choices. A comparison model must be
-configured consistently in both packages before export. Conversion concerns
+configured consistently in the compared packages before export. Conversion concerns
 coordinates, units, and representation of modes, not the Hamiltonian.
 
 ## What the animation means
@@ -105,8 +107,8 @@ in the reciprocal basis of that exported cell. Site vectors are in a shared
 Cartesian frame. The cell-periodic spatial phase and negative time phase are
 explicit fields; the viewer rejects other conventions.
 
-Sunny and SpinW differ in their native momentum convention. The exporters adapt
-to the common animation convention without reversing precession. They retain
+The packages differ in their native momentum and eigenvector conventions. The
+exporters adapt to the common animation convention without reversing precession. They retain
 the user's original reciprocal coordinates in `metadata.input_qpoints`; those
 native coordinates are shown alongside the selected energy. The lattice and
 atomic positions in the Structure panel describe the exported magnetic cell.
@@ -119,8 +121,11 @@ clean-install checks, browser checks, and remaining limitations. The
 
 The initial example collection covers the ferromagnetic and antiferromagnetic
 chain tutorials, CoRh₂O₄, FeI₂ in SU(N) mode, and the long-range dipole tutorial.
+Magnopy examples add a cubic ferromagnet, an elliptically polarized variation,
+and the two-site antiferromagnetic-chain tutorial. These are model examples,
+not validations of a DFT-to-exchange workflow.
 Generation scripts and solver tests live with the exporters. Saved JSON files
-allow browser testing without a Julia or MATLAB installation. See the exporter
+allow browser testing without any solver installation. See the exporter
 READMEs for the exact solver versions, source tutorials, and regeneration steps.
 
 Validation should compare energies and Cartesian mode observables, not raw

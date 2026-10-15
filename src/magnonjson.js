@@ -93,6 +93,10 @@ export function parseMagnonJson(data) {
     if (data.metadata?.input_qpoints !== undefined) {
         array(data.metadata.input_qpoints, nq, 'input_qpoints').forEach((q) => numbers(q, 3, 'input wavevector'));
     }
+    if (data.metadata?.input_qpoint_units !== undefined) {
+        requireValue(typeof data.metadata.input_qpoint_units === 'string' && data.metadata.input_qpoint_units.length <= 80,
+            'input_qpoint_units must be a short unit label.');
+    }
     return {
         ...data,
         name: typeof data.name === 'string' ? data.name : 'Magnon modes',

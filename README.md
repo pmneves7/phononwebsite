@@ -11,7 +11,7 @@ Project repository:
 <https://github.com/henriquemiranda/phononwebsite>
 
 The phonon viewer lets you inspect phonon dispersions and animate vibrational modes.
-The magnon viewer displays spin modes exported from Sunny or SpinW: click a
+The magnon viewer displays spin modes exported from Sunny, SpinW, or Magnopy: click a
 dispersion branch to animate spin arrows on the crystal structure.
 The exciton viewer shows exciton wavefunctions on real-space grids.
 The structure viewer can display crystal structures, repetitions, and charge-density
@@ -24,10 +24,12 @@ How to use?
 
 Open [magnon.html](magnon.html) and choose an example or load your exported JSON.
 The [magnon guide](doc/magnons/README.md) explains the controls and conventions.
-Small [Sunny](exporters/sunny/README.md) and [SpinW](exporters/spinw/README.md)
+Small [Sunny](exporters/sunny/README.md), [SpinW](exporters/spinw/README.md), and
+[Magnopy](exporters/magnopy/README.md)
 exporters provide one-call exports while preserving each solver's Hamiltonian
 and anisotropy conventions. Examples include paired chain tutorials, noncollinear
-SpinW models, and Sunny's CoRh₂O₄, FeI₂, and long-range dipole models.
+SpinW models, Sunny's CoRh₂O₄, FeI₂, and long-range dipole models, and Magnopy's
+cubic ferromagnet and antiferromagnetic-chain tutorials.
 
 ## Phonons
 
@@ -170,8 +172,11 @@ Repository layout
 - `test/`: JavaScript tests and fixtures
 - `python/phononweb/`: Python package and CLI scripts
 - `python/phononweb/tests/`: Python test suite
+- `exporters/`: optional Sunny, SpinW, and Magnopy adapters, examples, and solver tests
+- `doc/magnons/`: magnon usage, format, and validation guides
 - `build/`: generated deploy output
 - `data/localdb/`, `data/contribdb/`, `data/mpdb/`: runtime material databases
+- `data/magnons/`: small exported examples; no solver is needed to view them
 - `.github/workflows/`: CI and deploy workflows
 
 Conventions
@@ -180,7 +185,8 @@ Conventions
 - add new frontend logic in `src/`, not in inline HTML scripts
 - add JavaScript tests in `test/` as `*.test.mjs`
 - put reusable test data in `test/fixtures/`
-- add Python code in `python/phononweb/` and tests in `python/phononweb/tests/`
+- add website Python utilities in `python/phononweb/` and tests in `python/phononweb/tests/`
+- keep optional solver adapters and their tests under `exporters/<solver>/`
 - keep generated files out of source folders
 - if you move files, update the matching scripts and workflow paths in the same change
 
@@ -203,6 +209,7 @@ Start a local server from `build/`:
 Then open one of:
 
 - <http://localhost:8000/phonon.html>
+- <http://localhost:8000/magnon.html>
 - <http://localhost:8000/exciton.html>
 - <http://localhost:8000/structure.html>
 - <http://localhost:8000/index.html>

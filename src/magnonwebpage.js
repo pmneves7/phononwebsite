@@ -97,7 +97,7 @@ export class MagnonWebpage {
         this.dispersion.selectModePoint(this.phonon, k, band);
         const nativeQ = this.data.metadata?.input_qpoints;
         const q = (nativeQ ?? this.data.qpoints)[k].map((x) => Number(x.toFixed(4))).join(', ');
-        const basis = nativeQ ? 'input RLU' : 'magnetic RLU';
+        const basis = nativeQ ? (this.data.metadata.input_qpoint_units || 'input RLU') : 'magnetic RLU';
         this.$('#selected-mode').text(`q = (${q}) ${basis} · Band ${band + 1} · ${Number(this.data.energies[k][band].toPrecision(5))} meV`);
         this.$('#mode-note').text(this.viewer.modeScale === 0
             ? 'This mode has no spin-dipole motion. Higher multipoles are not shown by arrows.'

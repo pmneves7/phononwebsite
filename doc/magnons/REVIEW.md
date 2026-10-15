@@ -1,8 +1,8 @@
 # Magnon viewer: review guide
 
 This change adds a magnon page where selecting a dispersion point animates
-site-resolved spin arrows. Sunny and SpinW calculations are exported once to
-versioned JSON; neither solver runs in the browser. Local JSON files stay local.
+site-resolved spin arrows. Sunny, SpinW, and Magnopy calculations are exported
+once to versioned JSON; no solver runs in the browser. Local JSON files stay local.
 
 ## Short demo
 
@@ -24,7 +24,9 @@ Open `http://localhost:8000/magnon.html`.
 3. Choose **FeI₂ · Sunny SU(N)** and select band 8. All eight bands are retained;
    arrows show their dipole projection, including longitudinal motion. A pure
    multipolar mode can be invisible to this observable.
-4. Load a JSON file using **Your calculation**, or export a GIF/WebM of the
+4. Choose **Cubic ferromagnet (elliptic) · Magnopy** and enable **tip path** to
+   inspect elliptical precession from its native anisotropic mode.
+5. Load a JSON file using **Your calculation**, or export a GIF/WebM of the
    current 3D mode. The exporter READMEs document the one-call workflows.
 
 ## Code boundaries
@@ -34,9 +36,10 @@ Open `http://localhost:8000/magnon.html`.
   to the existing structure renderer.
 - `magnonhighcharts.js` adapts the existing dispersion chart to meV and relative
   spin-dipole weights. Atom/bond controls, cameras, cells, and tables are reused.
-- `exporters/sunny` and `exporters/spinw` preserve the native Hamiltonian and
-  anisotropy conventions, converting solver modes to Cartesian spin amplitudes.
-  No Sunny or SpinW sources are modified.
+- `exporters/sunny`, `exporters/spinw`, and `exporters/magnopy` preserve the native
+  Hamiltonian and anisotropy conventions, converting solver modes to Cartesian spin amplitudes.
+  No solver sources are modified. Magnopy's examples explicitly calculate modes
+  with Magnopy before passing them to the exporter.
 - Shared changes fix exact q-index selection at disconnected path boundaries,
   clear stale chart selections, pass the optional bond-add button, apply numeric
   appearance changes on blur, and reuse movie-export utilities. The existing
