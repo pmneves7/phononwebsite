@@ -42,20 +42,77 @@
                                 <button id="modeselect" type="button">Apply</button>
                             </div>
                             <p class="hint">Click a point on any branch to see its spin motion.</p>
+                            <div class="viewer-tools">
+                                <div><h3>Camera</h3>
+                                    <button id="camerax" type="button">x</button>
+                                    <button id="cameray" type="button">y</button>
+                                    <button id="cameraz" type="button">z</button>
+                                </div>
+                                <div><h3>Cell</h3><label><input id="drawcell" type="checkbox" checked> on</label></div>
+                                <div><h3>Export movie</h3>
+                                    <button id="gifbutton" type="button">GIF</button>
+                                    <button id="webmbutton" type="button">WebM</button>
+                                </div>
+                            </div>
+                            <progress id="movie-progress" max="1" value="0" aria-label="Movie export progress" hidden></progress>
+                            <p id="movie-status" class="hint" role="status" aria-live="polite"></p>
+                            <div class="viewer-toggles">
+                                <label title="Relative spin-dipole weight by element; excludes neutron polarization and form factors."><input id="mode_weights_plot" type="checkbox"> mode weights</label>
+                                <label><input id="drawshading" type="checkbox" checked> shading</label>
+                            </div>
                             <h3><label for="amplitude">Amplitude</label></h3>
                             <input id="amplitude" type="range" min="0" max="0.6" step="0.01" value="0.2">
+                            <input id="amplitude-value" aria-label="Magnon amplitude" type="number" min="0" max="0.6" step="0.01" value="0.2">
                             <h3><label for="speed">Speed</label></h3>
                             <input id="speed" type="range" min="0.05" max="2" step="0.05" value="0.5">
                             <button id="playpause" type="button" aria-pressed="false">Pause</button>
                             <h3><label for="phase">Phase</label></h3>
                             <input id="phase" type="range" min="0" max="360" step="1" value="0">
-                            <h3><label for="arrow-scale">Spin size</label></h3>
-                            <input id="arrow-scale" type="range" min="0.2" max="2.5" step="0.05" value="1">
-                            <h3>Camera</h3>
-                            <button id="camerax" type="button">x</button>
-                            <button id="cameray" type="button">y</button>
-                            <button id="cameraz" type="button">z</button>
-                            <label class="cell-toggle"><input id="drawcell" type="checkbox" checked> Cell</label>
+                            <div class="advanced-appearance">
+                                <div class="appearance-subsection">Atom</div>
+                                <div class="appearance-row">
+                                    <label for="displaystyle">display</label>
+                                    <select id="displaystyle"><option value="jmol">Jmol</option><option value="vesta">Vesta</option></select>
+                                </div>
+                                <div class="appearance-row">
+                                    <span>type</span><div id="appearance_atom_list" class="appearance-atom-list" aria-label="Atom type"></div>
+                                </div>
+                                <div class="appearance-row"><label for="atom_color_input">color</label><input id="atom_color_input" type="color"></div>
+                                <div class="appearance-row">
+                                    <label for="atom_radius_input">radius</label>
+                                    <div class="appearance-controls"><input id="atom_radius_input" type="number" min="0.1" max="5" step="0.05" value="0.6"><button id="appearance_reset_atom_button" type="button">reset</button></div>
+                                </div>
+                                <div class="appearance-subsection">Bonds</div>
+                                <div class="appearance-row">
+                                    <label for="bond_color_input">color</label>
+                                    <div class="appearance-controls"><input id="bond_color_input" type="color"><button id="appearance_reset_bonds_button" type="button">reset</button></div>
+                                </div>
+                                <div class="appearance-row"><label for="bond_radius_input">radius</label><input id="bond_radius_input" type="number" min="0.01" max="1" step="0.01" value="0.1"></div>
+                                <div class="appearance-row"><label for="bond_color_by_atom_checkbox">split colors</label><input id="bond_color_by_atom_checkbox" type="checkbox" checked></div>
+                                <div class="appearance-row"><span>types</span><div id="bond_rules_list"></div></div>
+                                <div class="appearance-row">
+                                    <label for="bond_add_atom_a">bond</label>
+                                    <div class="appearance-controls bond-add-controls">
+                                        <select id="bond_add_atom_a" aria-label="First bond element"></select>
+                                        <select id="bond_add_atom_b" aria-label="Second bond element"></select>
+                                        <input id="bond_add_cutoff_input" aria-label="Bond cutoff in angstroms" type="number" min="0.01" step="0.01" placeholder="max">
+                                        <button id="bond_add_button" type="button">add</button>
+                                    </div>
+                                </div>
+                                <div class="appearance-subsection">Spin arrows</div>
+                                <div class="appearance-row"><label for="arrow-color">color</label><input id="arrow-color" type="color" value="#336ca6"></div>
+                                <div class="appearance-row"><label for="arrows-visible">visible</label><input id="arrows-visible" type="checkbox" checked></div>
+                                <div class="appearance-row"><label for="arrow-scale">length</label><input id="arrow-scale" type="range" min="0.1" max="4" step="0.05" value="1"></div>
+                                <div class="appearance-row"><label for="arrow-length-value">scale</label><input id="arrow-length-value" type="number" min="0.1" max="4" step="0.05" value="1"></div>
+                                <div class="appearance-row"><label for="shaft-width">cylinder width</label><input id="shaft-width" type="number" min="0.002" max="4" step="0.01" value="0.1"></div>
+                                <div class="appearance-row"><label for="cone-width">cone width</label><input id="cone-width" type="number" min="0.002" max="8" step="0.01" value="0.25"></div>
+                                <div class="appearance-row"><label for="cone-fraction">cone fraction</label><input id="cone-fraction" type="number" min="0" max="1" step="0.05" value="0.25"></div>
+                                <div class="appearance-row"><label for="center-arrows">center on atom</label><input id="center-arrows" type="checkbox"></div>
+                                <div class="appearance-row"><label for="show-tip-paths">tip path</label><input id="show-tip-paths" type="checkbox"></div>
+                                <div class="appearance-row"><label for="tip-path-width">path thickness</label><input id="tip-path-width" type="number" min="0.002" max="2" step="0.005" value="0.03"></div>
+                                <p class="hint">Widths are diameters in Å. Cone fraction is the fraction of the total arrow length. Tip paths show one full cycle.</p>
+                                <button id="reset-spin-appearance" type="button">Reset spin appearance</button>
+                            </div>
                         </div>
                         <details>
                             <summary>Structure</summary>

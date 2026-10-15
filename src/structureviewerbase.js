@@ -293,6 +293,7 @@ export class StructureViewerBase {
         domBondAddCutoffInput,
         domResetAtomButton,
         domResetBondsButton,
+        domBondAddButton,
     ) {
         this.domAppearanceAtomList = domAtomList;
         this.domAtomColorInput = domAtomColorInput;
@@ -380,6 +381,7 @@ export class StructureViewerBase {
             domBondAddAtomA,
             domBondAddAtomB,
             domBondAddCutoffInput,
+            domBondAddButton,
             () => {
                 this.refreshAppearanceControls();
                 this.updateStructure();
@@ -387,6 +389,8 @@ export class StructureViewerBase {
         );
 
         bindEnterToApply([domAtomRadiusInput, domBondRadiusInput], applyAppearanceSettings);
+        if (domAtomRadiusInput?.length) domAtomRadiusInput.on('change', applyAppearanceSettings);
+        if (domBondRadiusInput?.length) domBondRadiusInput.on('change', applyAppearanceSettings);
 
         if (domResetAtomButton && domResetAtomButton.length) {
             domResetAtomButton.on('click', () => {

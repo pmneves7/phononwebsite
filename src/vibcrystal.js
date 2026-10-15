@@ -10,6 +10,7 @@ import { StructureViewerBase } from './structureviewerbase.js';
 import { buildCrystalBondRules, getChemicalBondLimit } from './bonding.js';
 import { createAtomSphereGeometry, createBondCylinderGeometry, createCellLineObject } from './viewergeometry.js';
 import { buildBondList, getViewerAtomRadius } from './viewermeshes.js';
+import { getSupportedWebmMimeType, supportsWebmCapture, getCaptureFrameTarget, getCaptureFilename, downloadCapture } from './viewercapture.js';
 
 const vec_y = new THREE.Vector3( 0, 1, 0 );
 const vec_0 = new THREE.Vector3( 0, 0, 0 );
@@ -52,49 +53,6 @@ function getBond( point1, point2 ) {
 
     return { quaternion: quaternion,
              midpoint: point1.clone().add( direction.multiplyScalar(0.5) ) };
-}
-
-function getSupportedWebmMimeType() {
-    if (typeof globalThis.MediaRecorder !== 'function') {
-        return null;
-    }
-
-    const preferredTypes = [
-        'video/webm;codecs=vp9,opus',
-        'video/webm;codecs=vp8,opus',
-        'video/webm;codecs=vp9',
-        'video/webm;codecs=vp8',
-        'video/webm',
-    ];
-
-    if (typeof globalThis.MediaRecorder.isTypeSupported !== 'function') {
-        return preferredTypes[preferredTypes.length - 1];
-    }
-
-    for (let i = 0; i < preferredTypes.length; i++) {
-        if (globalThis.MediaRecorder.isTypeSupported(preferredTypes[i])) {
-            return preferredTypes[i];
-        }
-    }
-
-    return null;
-}
-
-function browserSupportsNativeWebmCapture() {
-    if (typeof window === 'undefined' || typeof document === 'undefined') {
-        return false;
-    }
-
-    let canvas = document.createElement('canvas');
-    if (!canvas || typeof canvas.captureStream !== 'function') {
-        return false;
-    }
-
-    return !!getSupportedWebmMimeType();
-}
-
-function browserSupportsWebmCapture() {
-    return browserSupportsNativeWebmCapture();
 }
 
 export class VibCrystal extends StructureViewerBase {
@@ -415,7 +373,7 @@ export class VibCrystal extends StructureViewerBase {
 
     setWebmButton(dom_button) {
         let self = this;
-        if (!browserSupportsWebmCapture()) {
+        if (!supportsWebmCapture()) {
             dom_button.hide();
         }
 
@@ -865,13 +823,7 @@ export class VibCrystal extends StructureViewerBase {
 
         capturer.stop();
         capturer.save((url) => {
-            let element = document.createElement('a');
-            element.setAttribute('href', url);
-            element.setAttribute('download', filename);
-            element.style.display = 'none';
-            document.body.appendChild(element);
-            element.click();
-            document.body.removeChild(element);
+            downloadCapture(url, filename);
 
             this.resetCaptureProgress(progress);
             this.resetCaptureState();
@@ -968,13 +920,7 @@ export class VibCrystal extends StructureViewerBase {
         recorder.onstop = () => {
             let blob = new Blob(this.captureRecorderChunks, { type: this.captureRecorderMimeType || 'video/webm' });
             let url = window.URL.createObjectURL(blob);
-            let element = document.createElement('a');
-            element.setAttribute('href', url);
-            element.setAttribute('download', this.getCaptureFilename('webm'));
-            element.style.display = 'none';
-            document.body.appendChild(element);
-            element.click();
-            document.body.removeChild(element);
+            downloadCapture(url, this.getCaptureFilename('webm'));
 
             this.resetCaptureProgress(progress);
             this.resetCaptureState();
@@ -985,8 +931,7 @@ export class VibCrystal extends StructureViewerBase {
     }
 
     getCaptureFrameTarget() {
-        let speed = Math.max(this.speed, this.minSpeed, 1e-6);
-        return Math.max(1, Math.round(this.fps / speed));
+        return getCaptureFrameTarget(this.speed, this.fps, this.minSpeed);
     }
 
     getCaptureDurationMs(frameTarget = this.getCaptureFrameTarget()) {
@@ -1015,19 +960,7 @@ export class VibCrystal extends StructureViewerBase {
     }
 
     getCaptureFilename(format) {
-        let base = this.phonon && this.phonon.name ? this.phonon.name : 'phonon';
-        let suffix = '';
-        if (Number.isFinite(this.captureK) && Number.isFinite(this.captureN)) {
-            suffix = '_k' + this.captureK + '_n' + this.captureN;
-        }
-        let safe = String(base)
-            .trim()
-            .replace(/\s+/g, '_')
-            .replace(/[^a-zA-Z0-9._-]/g, '');
-        if (!safe) {
-            safe = 'phonon';
-        }
-        return safe + suffix + '.' + format;
+        return getCaptureFilename(this.phonon?.name, this.captureK, this.captureN, format);
     }
 
     getAtypes(atom_numbers) {

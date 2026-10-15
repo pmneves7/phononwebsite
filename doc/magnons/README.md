@@ -11,6 +11,46 @@ dispersion selection. It adds a small spin-animation layer. Calculations remain
 in Sunny or SpinW; loading a file in the browser does not require either solver.
 Local uploads are read in the browser and are not sent to a server.
 
+## Appearance and movies
+
+The camera, cell, shading, Jmol/Vesta atom display, per-element atom color and
+radius, and bond color/radius/type controls follow the phonon viewer. Bond cutoffs
+are in Å; atom radius is a multiplier. Add or remove bond types with the same
+element-pair controls. Reset buttons restore the corresponding section.
+
+Spin arrows have independent length, color, cylinder width, cone width, and cone
+fraction controls. Length is a display multiplier; changing it leaves widths
+unchanged. Cylinder width, cone width, and tip-path thickness are **diameters in
+Å**, while cone fraction is between 0 and 1 and specifies how much of the total
+arrow length is occupied by its head. Spin styling persists when selecting
+another mode or changing atom/bond appearance.
+
+By default the arrow's tail is attached to its atom. **Center on atom** fixes the
+arrow's midpoint to the atom instead: both ends move symmetrically, and the tip
+travels half as far from the atom for the same total arrow length. This changes
+only the drawing, not the spin expectation value or eigenmode.
+
+**Tip path** draws the tip's complete trajectory through one phase cycle, using
+the arrow color and its own thickness. It follows the actual complex Cartesian
+mode, including elliptical or longitudinal response; a linearly polarized mode
+traces a segment and a stationary mode has no path. This is a full-cycle guide,
+not a fading history. Paths update with the mode, amplitude, arrow length, and
+anchor choice. They can remain visible when the arrows are hidden.
+
+**Mode weights** colors the dispersion by relative spin-dipole weight per
+element, summing `|d|²` over Cartesian components and magnetic sites and
+normalizing at each q and band. Nonmagnetic atoms and equilibrium spins do not
+contribute. Purely dipole-dark modes retain an uncolored dispersion branch.
+These weights are not neutron intensities: no g tensor, polarization factor,
+form factor, or thermal population is applied.
+
+GIF and WebM export the 3D view through one visual phase cycle at the selected
+speed, including when playback is paused. Export temporarily locks the controls
+and then restores the original phase and playback state. As with phase scrubbing,
+an export can illustrate the phase dependence of a zero-energy mode. WebM is
+disabled when the browser has no compatible native recorder; GIF uses the same
+bundled encoder as the phonon viewer. All encoding happens locally.
+
 ## Export a calculation
 
 - [Sunny exporter](../../exporters/sunny/README.md): a small Julia package with

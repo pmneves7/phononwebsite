@@ -4,6 +4,16 @@
 .magnon-page #kindex, .magnon-page #nindex { width: 3.5rem; }
 .magnon-page .mode-inputs { display: flex; align-items: end; gap: 0.4rem; flex-wrap: wrap; }
 .magnon-page .mode-inputs label { display: flex; flex-direction: column; gap: 0.15rem; }
+.magnon-page .viewer-tools, .magnon-page .viewer-toggles { display: flex; gap: 0.65rem; flex-wrap: wrap; }
+.magnon-page .viewer-toggles { margin-top: 0.5rem; }
+.magnon-page #movie-status:empty { display: none; }
+.magnon-page #movie-progress { width: 100%; margin-top: 0.5rem; }
+.magnon-page #amplitude-value { width: 4rem; }
+.magnon-page .appearance-row { grid-template-columns: 86px minmax(0, 1fr); }
+.magnon-page .appearance-controls { flex-wrap: wrap; }
+.magnon-page .advanced-appearance input[type="number"] { width: 4.5rem; max-width: 100%; box-sizing: border-box; }
+.magnon-page .advanced-appearance select { max-width: 100%; }
+.magnon-page .bond-add-controls { gap: 3px; }
 .magnon-page input[type="range"] { max-width: 100%; }
 .magnon-page .hint { color: #52606d; font-size: 0.85rem; line-height: 1.4; }
 .magnon-page #load-status:empty, .magnon-page #mode-note:empty { display: none; }
