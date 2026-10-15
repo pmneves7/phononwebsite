@@ -19,6 +19,10 @@ describe('Build smoke tests', () => {
       'build/exciton.js.map',
       'build/exciton.min.js',
       'build/exciton.min.js.map',
+      'build/magnon.js',
+      'build/magnon.js.map',
+      'build/magnon.min.js',
+      'build/magnon.min.js.map',
     ];
 
     for (const file of requiredFiles) {
@@ -47,6 +51,15 @@ describe('Build smoke tests', () => {
       html.includes('<script src="exciton.min.js" type="module"></script>'),
       'exciton.html should load exciton.min.js'
     );
+  });
+
+  it('ships the magnon entrypoint, examples, and export guides', () => {
+    assert.ok(read('build/magnon.html').includes('<script src="magnon.min.js" type="module"></script>'));
+    const examples = JSON.parse(read('build/data/magnons/models.json'));
+    for (const example of examples) assert.ok(fs.existsSync(path.join('build', example.file)));
+    for (const file of ['doc/magnons/FORMAT.md', 'exporters/sunny/README.md', 'exporters/spinw/README.md']) {
+      assert.ok(fs.existsSync(path.join('build', file)), `Missing magnon guide: ${file}`);
+    }
   });
 
   it('keeps exciton datasets in the shared standard format', () => {

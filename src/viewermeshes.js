@@ -8,6 +8,7 @@ export function getViewerAtomRadius(display, atomNumber, atomScale, sphereRadius
 export function buildBondList(atomobjects, bondRules, getBondRuleKey, getDefaultBondCutoff, options = {}) {
     const bonds = [];
     const requireRule = !!options.requireRule;
+    if (requireRule && Object.keys(bondRules).length === 0) return bonds;
 
     for (let i = 0; i < atomobjects.length; i++) {
         const atomA = atomobjects[i];

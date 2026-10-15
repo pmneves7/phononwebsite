@@ -8,6 +8,11 @@ const plugins = [
 
 export default [
     {
+        input: 'src/magnonmain.js',
+        output: [{ format: 'es', file: 'build/magnon.js', sourcemap: true }],
+        plugins,
+    },
+    {
         input: 'src/main.js',
         output: [
             {

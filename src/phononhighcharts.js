@@ -15,6 +15,7 @@ export class PhononHighcharts {
         this.currentOptions = {};
         this.selectedPoint = null;
         this.selectedBandIndex = null;
+        this.selectedK = null;
         this.selectedX = null;
 
         let phonon = this.phonon;
@@ -115,11 +116,13 @@ export class PhononHighcharts {
             this.selectedPoint = null;
         }
 
+        // Disconnected path segments can share an x coordinate. Search every
+        // segment for the exact index before falling back to legacy x matching.
+        let fallbackPoint = null;
         for (let i=0; i<this.chart.series.length; i++) {
             let series = this.chart.series[i];
             if (series.options.isLegendSeries || series.options.isWeightSeries) { continue; }
             if (Number(series.options.bandIndex) !== Number(n)) { continue; }
-            let fallbackPoint = null;
             for (let j=0; j<series.points.length; j++) {
                 let point = series.points[j];
                 let pointK = point.options ? point.options.kIndex : undefined;
@@ -135,14 +138,14 @@ export class PhononHighcharts {
                     fallbackPoint = point;
                 }
             }
-            if (fallbackPoint) {
-                fallbackPoint.select(true, false);
-                this.selectedPoint = fallbackPoint;
-                this.selectedBandIndex = n;
-                this.selectedK = k;
-                this.selectedX = targetX;
-                return;
-            }
+        }
+        if (fallbackPoint) {
+            fallbackPoint.select(true, false);
+            this.selectedPoint = fallbackPoint;
+            this.selectedBandIndex = n;
+            this.selectedK = k;
+            this.selectedX = targetX;
+            return;
         }
 
         this.selectedBandIndex = null;
@@ -535,6 +538,12 @@ export class PhononHighcharts {
         this.HighchartsOptions.xAxis.plotLines = plotLines;
         this.HighchartsOptions.xAxis.labels.formatter = this.labels_formatter(phonon)
         this.HighchartsOptions.yAxis.min = minVal;
+        // Highcharts destroys its Point objects with the old chart. A later
+        // selection must not dereference them or mistake them for new points.
+        this.selectedPoint = null;
+        this.selectedBandIndex = null;
+        this.selectedK = null;
+        this.selectedX = null;
         if (this.chart) {
             this.chart.destroy();
             this.chart = null;

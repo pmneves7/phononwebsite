@@ -15,8 +15,13 @@ fi
 
 rollup -c
 
-cp -r figures css libs data README.md phonon.html exciton.html structure.html favicon.svg favicon.ico build/
+cp -r figures css libs data README.md phonon.html magnon.html exciton.html structure.html favicon.svg favicon.ico build/
 rm -f build/data/phonondb2017/.gitignore
 cp build/main.js build/main.min.js
 cp build/exciton.js build/exciton.min.js
 cp build/structure.js build/structure.min.js
+
+mkdir -p build/doc
+cp -r doc/magnons build/doc/
+cp -r exporters build/
+cp build/magnon.js build/magnon.min.js

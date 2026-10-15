@@ -19,10 +19,16 @@ terser build/main.js -c -m --source-map "content=build/main.js.map,url=main.min.
 terser build/exciton.js -c -m --source-map "content=build/exciton.js.map,url=exciton.min.js.map" -o build/exciton.min.js
 terser build/structure.js -c -m --source-map "content=build/structure.js.map,url=structure.min.js.map" -o build/structure.min.js
 
-cp -r figures css libs data README.md phonon.html exciton.html structure.html favicon.svg favicon.ico build/
+cp -r figures css libs data README.md phonon.html magnon.html exciton.html structure.html favicon.svg favicon.ico build/
 rm -f build/data/phonondb2017/.gitignore
 cp -r test/fixtures build/test/
 
 test -f build/main.min.js
 test -f build/exciton.min.js
 test -f build/structure.min.js
+
+mkdir -p build/doc
+cp -r doc/magnons build/doc/
+cp -r exporters build/
+terser build/magnon.js -c -m --source-map "content=build/magnon.js.map,url=magnon.min.js.map" -o build/magnon.min.js
+test -f build/magnon.min.js

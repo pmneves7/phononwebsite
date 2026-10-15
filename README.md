@@ -1,7 +1,7 @@
 Phonon website
 ==============
 
-#### Visualize phonons, excitons, structures, and isosurfaces
+#### Visualize phonons, magnons, excitons, structures, and isosurfaces
 
 This repository contains the web applications behind the phononwebsite project.
 It started as a phonon visualization tool and now also includes dedicated pages for
@@ -11,12 +11,25 @@ Project repository:
 <https://github.com/henriquemiranda/phononwebsite>
 
 The phonon viewer lets you inspect phonon dispersions and animate vibrational modes.
+The magnon viewer displays spin modes exported from Sunny or SpinW: click a
+dispersion branch to animate spin arrows on the crystal structure.
 The exciton viewer shows exciton wavefunctions on real-space grids.
 The structure viewer can display crystal structures, repetitions, and charge-density
 isosurfaces with either marching cubes or raymarch rendering.
 
 How to use?
 ===========
+
+## Magnons
+
+Open [magnon.html](magnon.html) and choose an example or load your exported JSON.
+The [magnon guide](doc/magnons/README.md) explains the controls and conventions.
+Small [Sunny](exporters/sunny/README.md) and [SpinW](exporters/spinw/README.md)
+exporters provide one-call exports while preserving each solver's Hamiltonian
+and anisotropy conventions. Examples include paired chain tutorials, noncollinear
+SpinW models, and Sunny's CoRh₂O₄, FeI₂, and long-range dipole models.
+
+## Phonons
 
 In the phonon section you can click any point in the dispersion and see an animation
 of the corresponding lattice vibration. The website can display built-in example

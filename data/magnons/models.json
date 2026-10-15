@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Ferromagnetic chain · Sunny",
+    "file": "data/magnons/sunny-sw01.json"
+  },
+  {
+    "name": "Antiferromagnetic chain · Sunny",
+    "file": "data/magnons/sunny-sw02.json"
+  },
+  {
+    "name": "CoRh₂O₄ · Sunny",
+    "file": "data/magnons/sunny-corh2o4.json"
+  },
+  {
+    "name": "FeI₂ · Sunny SU(N)",
+    "file": "data/magnons/sunny-fei2.json"
+  },
+  {
+    "name": "Long-range dipoles · Sunny",
+    "file": "data/magnons/sunny-dipole.json"
+  },
+  {
+    "file": "data/magnons/spinw-sw01-ferromagnetic-chain.json",
+    "name": "Ferromagnetic chain · SpinW"
+  },
+  {
+    "file": "data/magnons/spinw-sw02-antiferromagnetic-chain.json",
+    "name": "Antiferromagnetic chain · SpinW"
+  },
+  {
+    "file": "data/magnons/spinw-sw07-kagome.json",
+    "name": "Kagome antiferromagnet · SpinW"
+  },
+  {
+    "file": "data/magnons/spinw-sw12-triangular-easy-plane.json",
+    "name": "Triangular easy-plane magnet · SpinW"
+  }
+]

@@ -85,4 +85,76 @@ describe('PhononHighcharts selection sync', () => {
     assert.equal(selectedPoint, 'second');
     assert.equal(chartHelper.selectedK, 6);
   });
+
+  it('finds the exact k-index across disconnected segments before using an x fallback', () => {
+    const chartHelper = new PhononHighcharts(null);
+    let selectedPoint = null;
+    const previousSegmentEnd = {
+      x: 2, options: { kIndex: 5 },
+      select(value) { if (value) selectedPoint = 'previous'; },
+    };
+    const nextSegmentStart = {
+      x: 2, options: { kIndex: 6 },
+      select(value) { if (value) selectedPoint = 'next'; },
+    };
+    chartHelper.chart = {
+      series: [
+        { options: { bandIndex: 4 }, points: [previousSegmentEnd] },
+        { options: { bandIndex: 4 }, points: [nextSegmentStart] },
+      ],
+    };
+
+    chartHelper.selectModePoint({ distances: [0, 0, 0, 0, 0, 2, 2] }, 6, 4);
+
+    assert.equal(selectedPoint, 'next');
+    assert.equal(chartHelper.selectedPoint, nextSegmentStart);
+  });
+
+  for (const oldK of [0, 1]) {
+    it(`clears destroyed points when loading a new chart (${oldK === 0 ? 'same' : 'different'} selection)`, () => {
+      const chartHelper = new PhononHighcharts([{}]);
+      let destroyed = false;
+      let selected = false;
+      const oldHighcharts = globalThis.Highcharts;
+      const oldPoint = {
+        select() { throw new Error('A destroyed point cannot be selected'); },
+      };
+      chartHelper.selectedPoint = oldPoint;
+      chartHelper.selectedBandIndex = 0;
+      chartHelper.selectedK = oldK;
+      chartHelper.selectedX = oldK;
+      chartHelper.chart = {
+        destroy() {
+          assert.equal(chartHelper.selectedPoint, null);
+          assert.equal(chartHelper.selectedBandIndex, null);
+          assert.equal(chartHelper.selectedK, null);
+          assert.equal(chartHelper.selectedX, null);
+          destroyed = true;
+        },
+      };
+      const newPoint = {
+        x: 0, options: { kIndex: 0 },
+        select(value) { selected = value; },
+      };
+      globalThis.Highcharts = {
+        chart() {
+          return { series: [{ options: { bandIndex: 0 }, points: [newPoint] }] };
+        },
+      };
+      try {
+        const data = {
+          eigenvalues: [[1]], kpoints: [[0, 0, 0]], distances: [0],
+          highsym_qpts: {}, line_breaks: [[0, 1]],
+        };
+        chartHelper.update(data);
+        chartHelper.selectModePoint(data, 0, 0);
+        assert.equal(destroyed, true);
+        assert.equal(selected, true);
+        assert.equal(chartHelper.selectedPoint, newPoint);
+      } finally {
+        if (oldHighcharts === undefined) delete globalThis.Highcharts;
+        else globalThis.Highcharts = oldHighcharts;
+      }
+    });
+  }
 });

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Magnon modes — Phonon website</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/magnon.css">
+    <script src="magnon.min.js" type="module"></script>
+</head>
+<body class="magnon-page">
+    <div class="container">
+        <ul class="navigation">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="phonon.html">Phonons</a></li>
+            <li><a href="magnon.html" aria-current="page">Magnons</a></li>
+            <li><a href="exciton.html">Excitons</a></li>
+            <li><a href="structure.html">Structures</a></li>
+        </ul>
+        <div class="material-name"><h1 id="name">Magnon modes</h1></div>
+        <div class="flex-container">
+            <div class="flex-menu">
+                <div id="menu">
+                    <div id="options-list">
+                        <h3><label for="example-select">Examples</label></h3>
+                        <select id="example-select"><option value="">Choose an example</option></select>
+                        <h3><label for="file-input">Your calculation</label></h3>
+                        <input type="file" id="file-input" accept=".json,application/json">
+                        <p class="hint">Load a magnon JSON exported from Sunny or SpinW. <a href="doc/magnons/README.md">Export guide</a></p>
+                        <p id="load-status" role="status" aria-live="polite"></p>
+                        <div id="mode-controls">
+                            <h3>Repetitions</h3>
+                            <input id="nx" aria-label="Repetitions along a" type="number" min="1" max="50" value="1">
+                            <input id="ny" aria-label="Repetitions along b" type="number" min="1" max="50" value="1">
+                            <input id="nz" aria-label="Repetitions along c" type="number" min="1" max="50" value="1">
+                            <button id="update" type="button">Update</button>
+                            <h3>Mode selection</h3>
+                            <div class="mode-inputs">
+                                <label for="kindex">q-index <input id="kindex" type="number" min="1" value="1"></label>
+                                <label for="nindex">band <input id="nindex" type="number" min="1" value="1"></label>
+                                <button id="modeselect" type="button">Apply</button>
+                            </div>
+                            <p class="hint">Click a point on any branch to see its spin motion.</p>
+                            <h3><label for="amplitude">Amplitude</label></h3>
+                            <input id="amplitude" type="range" min="0" max="0.6" step="0.01" value="0.2">
+                            <h3><label for="speed">Speed</label></h3>
+                            <input id="speed" type="range" min="0.05" max="2" step="0.05" value="0.5">
+                            <button id="playpause" type="button" aria-pressed="false">Pause</button>
+                            <h3><label for="phase">Phase</label></h3>
+                            <input id="phase" type="range" min="0" max="360" step="1" value="0">
+                            <h3><label for="arrow-scale">Spin size</label></h3>
+                            <input id="arrow-scale" type="range" min="0.2" max="2.5" step="0.05" value="1">
+                            <h3>Camera</h3>
+                            <button id="camerax" type="button">x</button>
+                            <button id="cameray" type="button">y</button>
+                            <button id="cameraz" type="button">z</button>
+                            <label class="cell-toggle"><input id="drawcell" type="checkbox" checked> Cell</label>
+                        </div>
+                        <details>
+                            <summary>Structure</summary>
+                            <h3>Lattice vectors (Å)</h3><table id="lattice"></table>
+                            <h3>Atomic positions (fractional)</h3><table id="atompos"></table>
+                        </details>
+                        <p class="hint">Arrows show spin expectation values. Playback is slowed and amplitudes are scaled for visibility.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-vibcrystal"><div id="vibcrystal" aria-label="Animated spin structure"></div></div>
+            <div class="flex-highcharts">
+                <div class="magnon-plot">
+                    <p id="selected-mode" aria-live="polite"></p>
+                    <p id="mode-note" class="hint" aria-live="polite"></p>
+                    <div id="highcharts" aria-label="Magnon dispersion"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
