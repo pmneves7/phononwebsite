@@ -110,7 +110,7 @@ describe('Magnon arrow geometry and tip paths', () => {
         viewer.setMode(0, 1);
         assert.notEqual(viewer.tipPaths[0].geometry, resized);
         const differentMode = viewer.tipPaths[0].geometry;
-        viewer.setSpinAppearance({ centeredArrows: true });
+        viewer.setSpinAppearance({ centeredArrows: false });
         assert.notEqual(viewer.tipPaths[0].geometry, differentMode);
         viewer.removeStructure();
     });
@@ -145,7 +145,7 @@ describe('Magnon arrow geometry and tip paths', () => {
         viewer.resetSpinAppearance();
         assert.deepEqual(viewer.getSpinAppearance(), SPIN_APPEARANCE_DEFAULTS);
         assert.ok(viewer.spinArrows.every(({ group }) => group.visible));
-        assert.equal(viewer.tipPaths.length, 0);
+        assert.equal(viewer.tipPaths.length, 2);
         viewer.removeStructure();
     });
 });

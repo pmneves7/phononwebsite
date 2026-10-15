@@ -148,19 +148,19 @@ describe('Magnon appearance controls in the real page', { concurrency: false }, 
 
     it('toggles centered arrows and tip paths, updates their shared color, and resets spin appearance independently', (t) => {
         const { $, viewer } = setup(t);
-        $('#center-arrows, #show-tip-paths').prop('checked', true).trigger('change');
+        $('#center-arrows, #show-tip-paths').prop('checked', false).trigger('change');
         $('#arrows-visible').prop('checked', false).trigger('change');
         $('#arrow-color').val('#cc1188').trigger('input');
-        assert.equal(viewer.centeredArrows, true);
-        assert.equal(viewer.showTipPaths, true);
+        assert.equal(viewer.centeredArrows, false);
+        assert.equal(viewer.showTipPaths, false);
         assert.equal(viewer.arrowsVisible, false);
         assert.equal(viewer.arrowColor, '#cc1188');
         $('#amplitude-value').val('0.37').trigger('change');
         $('#atom_radius_input').val('1.2').trigger('change');
         $('#reset-spin-appearance').trigger('click');
         assert.deepEqual(viewer.getSpinAppearance(), SPIN_APPEARANCE_DEFAULTS);
-        assert.equal($('#center-arrows').prop('checked'), false);
-        assert.equal($('#show-tip-paths').prop('checked'), false);
+        assert.equal($('#center-arrows').prop('checked'), true);
+        assert.equal($('#show-tip-paths').prop('checked'), true);
         assert.equal($('#arrows-visible').prop('checked'), true);
         assert.equal($('#arrow-color').val(), SPIN_APPEARANCE_DEFAULTS.arrowColor);
         assert.equal(Number($('#shaft-width').val()), 2 * SPIN_APPEARANCE_DEFAULTS.shaftRadius);

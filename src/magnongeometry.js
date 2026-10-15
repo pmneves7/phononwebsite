@@ -7,9 +7,9 @@ export const SPIN_APPEARANCE_DEFAULTS = Object.freeze({
     shaftRadius: 0.05,
     coneRadius: 0.125,
     coneFraction: 0.25,
-    centeredArrows: false,
+    centeredArrows: true,
     arrowsVisible: true,
-    showTipPaths: false,
+    showTipPaths: true,
     tipPathRadius: 0.015,
 });
 
