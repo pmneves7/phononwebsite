@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sunny validation — Phonon website</title>
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/documentation.css">
+</head>
+<body>
+    <nav aria-label="Site"><ul class="navigation"><li><a href="../../index.html">Home</a></li><li><a href="../../phonon.html">Phonons</a></li><li><a href="../../magnon.html">Magnons</a></li><li><a href="../../exciton.html">Excitons</a></li><li><a href="../../structure.html">Structures</a></li></ul></nav>
+    <main class="documentation">
+        <nav class="documentation-links" aria-label="Magnon guides">
+            <a href="../../magnon.html">Back to magnon viewer</a>
+            <a href="../../doc/magnons/README.html">Viewer guide</a>
+            <a href="../../exporters/sunny/README.html">Sunny exporter</a>
+            <a href="../../exporters/spinw/README.html">SpinW exporter</a>
+            <a href="../../exporters/magnopy/README.html">Magnopy exporter</a>
+        </nav>
+        <h1 id="sunny-validation">Sunny validation</h1>
+<p>Executed on 2026-10-15 with Julia 1.11.7 on macOS arm64.</p>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sunny 0.9.2</td>
+<td>639 assertions passed</td>
+</tr>
+<tr>
+<td>Sunny 0.7.8</td>
+<td>639 assertions passed</td>
+</tr>
+</tbody>
+</table>
+<p>The five generated examples cover FM/AFM chains, CoRh₂O₄, Ewald dipoles with K-to-meV conversion, and FeI₂ SU(3). Tests compare native complex correlation tensors and analytic results, including ellipticity, DMI, and a dipole-dark mode. FM/AFM fixtures also agree with SpinW after aligning coordinates and degenerate subspaces. Goldstone points are excluded from cross-solver weight comparisons.</p>
+<p>The adapter uses Sunny’s internal local frames; rerun the tests for new versions. Sunny 0.8.x is in the compatibility range but was not tested. The native tensor reference must use the original System, not Sunny 0.7’s internally rotated system.</p>
+<p><a href="README.html">Exporter instructions</a> · <a href="../../doc/magnons/VALIDATION.html">Site validation</a></p>
+
+    </main>
+</body>
+</html>

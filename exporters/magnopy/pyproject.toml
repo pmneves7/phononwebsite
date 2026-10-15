@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "phononwebsite-magnopy"
+version = "0.1.0"
+description = "Export Magnopy modes to the phononwebsite magnon viewer"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["magnopy>=0.6.1,<0.7", "numpy>=2,<3"]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+py-modules = ["magnopy_magnon_export"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

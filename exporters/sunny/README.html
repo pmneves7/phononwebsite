@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sunny exporter — Phonon website</title>
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/documentation.css">
+</head>
+<body>
+    <nav aria-label="Site"><ul class="navigation"><li><a href="../../index.html">Home</a></li><li><a href="../../phonon.html">Phonons</a></li><li><a href="../../magnon.html">Magnons</a></li><li><a href="../../exciton.html">Excitons</a></li><li><a href="../../structure.html">Structures</a></li></ul></nav>
+    <main class="documentation">
+        <nav class="documentation-links" aria-label="Magnon guides">
+            <a href="../../magnon.html">Back to magnon viewer</a>
+            <a href="../../doc/magnons/README.html">Viewer guide</a>
+            <a href="../../exporters/sunny/README.html">Sunny exporter</a>
+            <a href="../../exporters/spinw/README.html">SpinW exporter</a>
+            <a href="../../exporters/magnopy/README.html">Magnopy exporter</a>
+        </nav>
+        <h1 id="sunny-exporter">Sunny exporter</h1>
+<p>From the website repository root, install once:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">julia</span> <span class="at">--project</span><span class="op">=</span>exporters/sunny <span class="at">-e</span> <span class="st">&#39;using Pkg; Pkg.instantiate()&#39;</span></span></code></pre></div>
+<p>Start Julia with <code>julia --project=exporters/sunny</code>. After building your Sunny <code>SpinWaveTheory</code> and <code>q_space_path</code>, export:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode julia"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Sunny</span>, <span class="bu">SunnyMagnonExport</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">export_magnons</span>(<span class="st">&quot;magnons.json&quot;</span>, swt, path; name<span class="op">=</span><span class="st">&quot;My magnet&quot;</span>)</span></code></pre></div>
+<p>Load the file in the <a href="../../magnon.html">magnon viewer</a>. To use an existing Julia project, add this package with <code>Pkg.develop(path="/path/to/phononwebsite/exporters/sunny")</code>.</p>
+<p>The default assumes meV and Å. If you used other units, pass the same Sunny <code>Units</code> object, e.g. <code>units=Units(:K, :angstrom)</code>. Optional keywords include <code>repetitions=(2,2,2)</code>, <code>atom_types</code>, and <code>source_url</code>.</p>
+<p><strong>Supported:</strong> periodic dipole and SU(N) spin waves, including Ewald dipoles. The exporter preserves Sunny’s anisotropy/Stevens and renormalization choices. It exports magnetic sites only. Spiral, KPM, and entangled-unit calculations are not supported. SU(N) arrows show the dipole component, including longitudinal motion; purely multipolar modes remain stationary.</p>
+<p>Tested with Sunny 0.7.8 and 0.9.2. Try the five bundled examples:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">julia</span> <span class="at">--project</span><span class="op">=</span>exporters/sunny exporters/sunny/examples/export_examples.jl</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">julia</span> <span class="at">--project</span><span class="op">=</span>exporters/sunny exporters/sunny/test/runtests.jl</span></code></pre></div>
+<p><a href="../../doc/magnons/FORMAT.html">Format and conventions</a> · <a href="VALIDATION.html">Validation</a></p>
+
+    </main>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Magnon validation — Phonon website</title>
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/documentation.css">
+</head>
+<body>
+    <nav aria-label="Site"><ul class="navigation"><li><a href="../../index.html">Home</a></li><li><a href="../../phonon.html">Phonons</a></li><li><a href="../../magnon.html">Magnons</a></li><li><a href="../../exciton.html">Excitons</a></li><li><a href="../../structure.html">Structures</a></li></ul></nav>
+    <main class="documentation">
+        <nav class="documentation-links" aria-label="Magnon guides">
+            <a href="../../magnon.html">Back to magnon viewer</a>
+            <a href="../../doc/magnons/README.html">Viewer guide</a>
+            <a href="../../exporters/sunny/README.html">Sunny exporter</a>
+            <a href="../../exporters/spinw/README.html">SpinW exporter</a>
+            <a href="../../exporters/magnopy/README.html">Magnopy exporter</a>
+        </nav>
+        <h1 id="magnon-validation">Magnon validation</h1>
+<p>Executed on 2026-10-15. These checks cover the bundled examples, not every upstream tutorial.</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sunny 0.7.8 and 0.9.2, Julia 1.11.7</td>
+<td>639 assertions passed per version; five examples</td>
+</tr>
+<tr>
+<td>SpinW dc06a4b, MATLAB R2026a</td>
+<td>Native exporter tests passed; four examples</td>
+</tr>
+<tr>
+<td>Magnopy 0.6.1, Python 3.12</td>
+<td>37 tests passed; three examples, 163 q points</td>
+</tr>
+<tr>
+<td>Website JavaScript suite</td>
+<td>99 passed, 3 optional checks skipped</td>
+</tr>
+<tr>
+<td>Existing Python phonon suite</td>
+<td>15 passed, 1 optional check skipped</td>
+</tr>
+</tbody>
+</table>
+<p>Checks include native energies and complex mode observables, analytic chain spectra, momentum signs, precession, ellipticity, and full cross-solver mode covariances. Degenerate subspaces are compared together; arbitrary eigenvector phases are not compared directly.</p>
+<p>Sunny examples include CoRh₂O₄, Ewald dipoles, and FeI₂ SU(3). SpinW includes noncollinear kagome and triangular models. Magnopy examples use its native FM and AFM tutorials; they do not test a DFT workflow.</p>
+<p>All files pass the browser parser. Debug/production builds and guide links were checked. Browser checks covered branch selection, centered arrows, tip paths, movies, narrow-screen controls, and phonon/exciton regressions. Optional external Playwright checks were not run.</p>
+<p>Scope: stable modes in explicit periodic cells. Damping, incommensurate rotating frames, and full multipolar dynamics are not supported. Magnopy may return nonorthogonal modes at exact degeneracies; those are rejected without repair.</p>
+<p><a href="../../exporters/sunny/VALIDATION.html">Sunny details</a> · <a href="../../exporters/magnopy/VALIDATION.html">Magnopy details</a> · <a href="REVIEW.html">Review guide</a></p>
+
+    </main>
+</body>
+</html>

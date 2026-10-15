@@ -1,0 +1,19 @@
+name = "SunnyMagnonExport"
+uuid = "f67499a1-c990-485a-b7b8-bf11cd4be794"
+version = "0.1.0"
+
+[deps]
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+Sunny = "2b4a2ac8-8f8b-43e8-abf4-3cb0c45e8736"
+
+[compat]
+JSON = "0.21"
+Sunny = "0.7.8, 0.8, 0.9"
+julia = "1.10"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]

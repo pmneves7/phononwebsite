@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Magnon viewer — Phonon website</title>
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/documentation.css">
+</head>
+<body>
+    <nav aria-label="Site"><ul class="navigation"><li><a href="../../index.html">Home</a></li><li><a href="../../phonon.html">Phonons</a></li><li><a href="../../magnon.html">Magnons</a></li><li><a href="../../exciton.html">Excitons</a></li><li><a href="../../structure.html">Structures</a></li></ul></nav>
+    <main class="documentation">
+        <nav class="documentation-links" aria-label="Magnon guides">
+            <a href="../../magnon.html">Back to magnon viewer</a>
+            <a href="../../doc/magnons/README.html">Viewer guide</a>
+            <a href="../../exporters/sunny/README.html">Sunny exporter</a>
+            <a href="../../exporters/spinw/README.html">SpinW exporter</a>
+            <a href="../../exporters/magnopy/README.html">Magnopy exporter</a>
+        </nav>
+        <h1 id="magnon-viewer">Magnon viewer</h1>
+<p>Open the <a href="../../magnon.html">magnon viewer</a>, choose an example or load a JSON file, then click a point on a dispersion branch. Drag to rotate and scroll to zoom.</p>
+<h2 id="export-a-calculation">Export a calculation</h2>
+<p>Use the exporter for your calculation:</p>
+<ul>
+<li><a href="../../exporters/sunny/README.html">Sunny</a> — Julia</li>
+<li><a href="../../exporters/spinw/README.html">SpinW</a> — MATLAB</li>
+<li><a href="../../exporters/magnopy/README.html">Magnopy</a> — Python</li>
+</ul>
+<p>The exporters keep your solver’s model and convert its modes to a common JSON file. Your colleague only needs the website to view it. Files loaded with the file chooser stay in the browser.</p>
+<h2 id="controls">Controls</h2>
+<ul>
+<li><strong>Amplitude / Speed / Phase:</strong> adjust the motion or pause at a chosen phase.</li>
+<li><strong>Repetitions:</strong> show more magnetic cells.</li>
+<li><strong>Atom / Bonds:</strong> use the same appearance controls as the phonon viewer.</li>
+<li><strong>Spin arrows:</strong> change length, color, cylinder/cone width, and cone fraction. Widths are diameters in Å; length is a display scale.</li>
+<li><strong>Center on atom:</strong> place the arrow’s midpoint on the atom.</li>
+<li><strong>Tip path:</strong> show the tip’s complete trajectory through one cycle.</li>
+<li><strong>GIF / WebM:</strong> save one animation cycle.</li>
+</ul>
+<p>Arrows show spin motion, not g-weighted magnetic moments. Amplitude and playback speed are visual scales. Mode weights show relative spin-dipole weight, not neutron intensity. A mode with no dipole component has no arrow motion.</p>
+<p>For another exporter, see the <a href="FORMAT.html">JSON format</a>.</p>
+
+    </main>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Magnopy validation — Phonon website</title>
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/documentation.css">
+</head>
+<body>
+    <nav aria-label="Site"><ul class="navigation"><li><a href="../../index.html">Home</a></li><li><a href="../../phonon.html">Phonons</a></li><li><a href="../../magnon.html">Magnons</a></li><li><a href="../../exciton.html">Excitons</a></li><li><a href="../../structure.html">Structures</a></li></ul></nav>
+    <main class="documentation">
+        <nav class="documentation-links" aria-label="Magnon guides">
+            <a href="../../magnon.html">Back to magnon viewer</a>
+            <a href="../../doc/magnons/README.html">Viewer guide</a>
+            <a href="../../exporters/sunny/README.html">Sunny exporter</a>
+            <a href="../../exporters/spinw/README.html">SpinW exporter</a>
+            <a href="../../exporters/magnopy/README.html">Magnopy exporter</a>
+        </nav>
+        <h1 id="magnopy-validation">Magnopy validation</h1>
+<p>Executed on 2026-10-15 with Python 3.12.0, Magnopy 0.6.1, NumPy 2.5.4, and Wulfric 0.7.3: <strong>37 tests passed</strong>.</p>
+<p>The three examples cover all modes at <strong>163 q points</strong>:</p>
+<ul>
+<li><a href="https://tutorials.magnopy.org/en/latest/master-tutorial/1_python-library/plot_8_lswt.html">Cubic FM tutorial</a>: 61 points.</li>
+<li>Elliptic variant of that model: 61 points.</li>
+<li><a href="https://tutorials.magnopy.org/en/latest/master-tutorial/3_exercises/plot_8_lswt.html#exercise-2">AFM exercise 2</a>: 41 points, two bands.</li>
+</ul>
+<p>Tests check native energies/eigen-equations, complex Sunny mode covariances, DMI momentum sign, ellipticity, coordinates, and export without recalculation. These are toy models, not DFT validation.</p>
+<p>Some exactly degenerate native AFM modes were nonorthogonal and are rejected. The Sunny comparison uses a small field to split branches and removes its known energy shifts in the test. The exporter makes no repair or Hamiltonian change. No native intensity comparison is claimed; Magnopy 0.6.1 has no public intensity API.</p>
+<p><a href="README.html">Exporter instructions</a> · <a href="../../doc/magnons/VALIDATION.html">Site validation</a></p>
+
+    </main>
+</body>
+</html>

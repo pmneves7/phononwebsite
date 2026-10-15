@@ -1,0 +1,14 @@
+.documentation {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1.25rem 1.25rem 3rem;
+    line-height: 1.6;
+    overflow-wrap: break-word;
+}
+.documentation h1 { margin: 0.8em 0 0.4em; }
+.documentation h2 { margin-top: 1.8em; }
+.documentation h3 { font-size: 1.1em; margin-top: 1.4em; }
+.documentation pre { overflow-x: auto; }
+.documentation table { display: block; overflow-x: auto; }
+.documentation-links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; }
+.documentation-links a { color: #12658c; }

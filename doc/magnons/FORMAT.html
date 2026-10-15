@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Magnon JSON, version 1 — Phonon website</title>
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/documentation.css">
+</head>
+<body>
+    <nav aria-label="Site"><ul class="navigation"><li><a href="../../index.html">Home</a></li><li><a href="../../phonon.html">Phonons</a></li><li><a href="../../magnon.html">Magnons</a></li><li><a href="../../exciton.html">Excitons</a></li><li><a href="../../structure.html">Structures</a></li></ul></nav>
+    <main class="documentation">
+        <nav class="documentation-links" aria-label="Magnon guides">
+            <a href="../../magnon.html">Back to magnon viewer</a>
+            <a href="../../doc/magnons/README.html">Viewer guide</a>
+            <a href="../../exporters/sunny/README.html">Sunny exporter</a>
+            <a href="../../exporters/spinw/README.html">SpinW exporter</a>
+            <a href="../../exporters/magnopy/README.html">Magnopy exporter</a>
+        </nav>
+        <h1 id="magnon-json-version-1">Magnon JSON, version 1</h1>
+<p>This format stores already-calculated spin modes. It deliberately contains no Hamiltonian parser or solver-specific bosonic eigenbasis. The web viewer only needs Cartesian expectation-value fluctuations and the matching energies.</p>
+<h2 id="required-fields">Required fields</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Shape / meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>format</code></td>
+<td>Exactly <code>"magnonwebsite"</code></td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td>Integer <code>1</code></td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>Display name (plain text)</td>
+</tr>
+<tr>
+<td><code>units</code></td>
+<td><code>{"length":"angstrom","energy":"meV","spin":"hbar"}</code></td>
+</tr>
+<tr>
+<td><code>phase_convention</code></td>
+<td><code>"cell-periodic"</code></td>
+</tr>
+<tr>
+<td><code>time_convention</code></td>
+<td><code>"exp(-iwt)"</code></td>
+</tr>
+<tr>
+<td><code>lattice</code></td>
+<td>Three <strong>row</strong> vectors of the periodic magnetic cell, in Å</td>
+</tr>
+<tr>
+<td><code>atom_types</code></td>
+<td><code>N</code> element symbols; <code>X</code> for an unspecified model site</td>
+</tr>
+<tr>
+<td><code>atom_pos_red</code></td>
+<td><code>N × 3</code> fractional coordinates in that cell</td>
+</tr>
+<tr>
+<td><code>magnetic_atom_indices</code></td>
+<td><code>M</code> unique <strong>zero-based</strong> indices into the atom arrays</td>
+</tr>
+<tr>
+<td><code>spin_vectors</code></td>
+<td><code>M × 3</code> ordered Cartesian spin expectation values in ħ</td>
+</tr>
+<tr>
+<td><code>qpoints</code></td>
+<td><code>Q × 3</code> fractional reciprocal coordinates of the exported lattice</td>
+</tr>
+<tr>
+<td><code>energies</code></td>
+<td><code>Q × B</code> nonnegative, finite excitation energies in meV</td>
+</tr>
+<tr>
+<td><code>vectors</code></td>
+<td><code>Q × B × M × 3 × 2</code>: Cartesian components, each <code>[real, imaginary]</code></td>
+</tr>
+</tbody>
+</table>
+<p>The ordering of sites in <code>vectors</code> and <code>spin_vectors</code> is exactly the ordering of <code>magnetic_atom_indices</code>. <code>B</code> is the number of physical modes, not the doubled particle/hole dimension. It need not equal <code>M</code> (e.g. SU(N) modes). All singleton array dimensions must be retained, including a one-site mode. JSON does not encode complex numbers, NaN, or infinity; these must not be written as strings or silently replaced by null.</p>
+<h2 id="optional-fields">Optional fields</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>repetitions</code></td>
+<td>Three positive integers; defaults to <code>[1,1,1]</code></td>
+</tr>
+<tr>
+<td><code>distances</code></td>
+<td><code>Q</code> nonnegative, nondecreasing path coordinates</td>
+</tr>
+<tr>
+<td><code>highsym_qpts</code></td>
+<td>Pairs <code>[zeroBasedQIndex, "label"]</code></td>
+</tr>
+<tr>
+<td><code>line_breaks</code></td>
+<td>Consecutive <code>[startInclusive,endExclusive]</code> segments partitioning all q-points</td>
+</tr>
+<tr>
+<td><code>metadata</code></td>
+<td>Provenance and solver-specific information, not executable content</td>
+</tr>
+</tbody>
+</table>
+<p>Without distances, the reader computes reciprocal Cartesian path length in Å⁻¹, with the <code>2π</code> included, and no distance jump between disconnected segments. Without segments, the entire path is connected. Repeated boundary points are allowed. Labels at the same path coordinate are combined.</p>
+<p>Recommended metadata include producer, producer version, exporter version, normalization, source tutorial URL, and the original <code>input_qpoints</code> as a <code>Q × 3</code> array. Optional <code>input_qpoint_units</code> labels those displayed coordinates (default: <code>input RLU</code>); Magnopy can also supply Cartesian reciprocal coordinates. Native input q-points are displayed when supplied. They do not control the animation: only the canonical <code>qpoints</code> do.</p>
+<h2 id="reconstruction-and-normalization">Reconstruction and normalization</h2>
+<p>Let the rows of <code>lattice</code> be <code>a_j</code>. The position of site <code>i</code> in cell <code>R</code> is <code>sum_j (R_j + atom_pos_red[i][j]) a_j</code>. The reciprocal basis includes <code>2π</code> and satisfies <code>a_j·b_k = 2π δ_jk</code>.</p>
+<p>For a selected q and band, write <code>d_i</code> for the complex vector in <code>vectors</code>. The reconstruction is</p>
+<pre><code>S_Ri(phase) = S0_i + A Re[d_i exp(i(2π q·R − phase))].</code></pre>
+<p>There is <strong>no additional</strong> <code>q·atom_pos_red</code> term in the viewer. An exporter must convert any position-inclusive Bloch gauge to this cell-periodic gauge. When a solver already uses the cell-periodic gauge, no basis-phase conversion is needed. Both equilibrium spins and mode vectors must be rotated into the same global Cartesian coordinate frame as the lattice.</p>
+<p>The bundled exporters use one-magnon spin matrix elements (<code>sqrt(S/2)</code> factors for ordinary Holstein–Primakoff modes). Their metadata document normalization. Only a common overall mode amplitude is arbitrary for visualization; independently normalizing each site changes the physics and is not permitted. Both particle and hole blocks contribute, even when only positive-energy modes are exported. Neither g-tensors, magnetic form factors, Bose populations, nor neutron polarization factors belong in <code>vectors</code>.</p>
+<p>The viewer rescales the complete mode by one common factor for visibility. Exactly zero or numerically negligible dipole vectors remain zero. A pure multipolar mode is valid and may have no visible arrow motion.</p>
+<h2 id="solver-independence">Solver independence</h2>
+<p>The exporters leave all interactions, Stevens coefficients, quantum correction choices, and ground-state optimization to the originating solver. They convert units and representations only. The SpinW adapter accounts for its opposite native momentum sign while keeping its original input coordinates in metadata. The Sunny adapter uses its own magnetic-cell conversion and native local frames. The Magnopy adapter translates native <code>LSWT.diagonalize</code> transformations using Magnopy’s local spin frames; it accepts precomputed results and adds no solver. Each adapter’s README specifies its supported versions and native conventions.</p>
+<p>For adapter maintenance, the Cartesian amplitudes are:</p>
+<table>
+<thead>
+<tr>
+<th>Solver</th>
+<th>Native mode → Cartesian spin</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sunny dipole</td>
+<td><code>sqrt(S/2) R (u+v, i(v−u), 0)</code> using Sunny’s local frame</td>
+</tr>
+<tr>
+<td>Sunny SU(N)</td>
+<td><code>dᵃ = Σf [Oᵃ[N,f] u_f + Oᵃ[f,N] v_f]</code>; local ground state is component N</td>
+</tr>
+<tr>
+<td>SpinW</td>
+<td><code>sqrt(S/2) [conj(z) u + z v]</code>, with <code>z=e1+i e2</code>; export <code>q=−diag(N_ext) qmat q_input</code></td>
+</tr>
+<tr>
+<td>Magnopy</td>
+<td><code>sqrt(S/2) [conj(p) conj(G[n,i]) − p conj(G[n,M+i])]</code>, with <code>p=x+i y</code>; G contains mode rows</td>
+</tr>
+</tbody>
+</table>
+<p>Sunny q points refer to the original crystal and are converted to the magnetic cell. Magnopy reduced q points already refer to the exported cell. All three native mode bases are cell-periodic, so no atomic-position phase is added. SpinW requests <code>saveV=true, sortMode=false</code> to keep energies and vectors paired. Sunny’s internal-frame dependency is isolated in <code>sunny_adapter.jl</code>.</p>
+<p>Version 1 does not encode multiple domains, incommensurate rotating frames, complex unstable energies, damping, thermal trajectories, or higher multipole operators. Such data require an explicit extension rather than reinterpretation of existing fields.</p>
+
+    </main>
+</body>
+</html>

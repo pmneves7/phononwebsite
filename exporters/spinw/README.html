@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SpinW exporter — Phonon website</title>
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/documentation.css">
+</head>
+<body>
+    <nav aria-label="Site"><ul class="navigation"><li><a href="../../index.html">Home</a></li><li><a href="../../phonon.html">Phonons</a></li><li><a href="../../magnon.html">Magnons</a></li><li><a href="../../exciton.html">Excitons</a></li><li><a href="../../structure.html">Structures</a></li></ul></nav>
+    <main class="documentation">
+        <nav class="documentation-links" aria-label="Magnon guides">
+            <a href="../../magnon.html">Back to magnon viewer</a>
+            <a href="../../doc/magnons/README.html">Viewer guide</a>
+            <a href="../../exporters/sunny/README.html">Sunny exporter</a>
+            <a href="../../exporters/spinw/README.html">SpinW exporter</a>
+            <a href="../../exporters/magnopy/README.html">Magnopy exporter</a>
+        </nav>
+        <h1 id="spinw-exporter">SpinW exporter</h1>
+<p>Add the exporter alongside your existing SpinW installation:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">addpath</span>(<span class="ss">&#39;/path/to/phononwebsite/exporters/spinw&#39;</span>)<span class="op">;</span></span></code></pre></div>
+<p>After defining the model and ordered spins, export:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="va">export_magnons</span>(<span class="ss">&#39;magnons.json&#39;</span><span class="op">,</span> <span class="va">model</span><span class="op">,</span> {[<span class="fl">0</span> <span class="fl">0</span> <span class="fl">0</span>] [<span class="fl">0.5</span> <span class="fl">0</span> <span class="fl">0</span>] [<span class="fl">1</span> <span class="fl">0</span> <span class="fl">0</span>] <span class="fl">101</span>})<span class="op">;</span></span></code></pre></div>
+<p>Load the file in the <a href="../../magnon.html">magnon viewer</a>. The path follows SpinW: a <strong>3 × N</strong> array, or path vertices in a cell array with an optional sample count. Options include <code>'Name', 'My magnet'</code>, <code>'Labels', {'Γ','X','Γ'}</code>, and <code>'Repetitions', [4 2 1]</code>.</p>
+<p><strong>Supported:</strong> stable numerical modes in an explicit periodic magnetic cell, with SpinW’s standard meV and Å units. Nonmagnetic atoms are retained. The exporter keeps SpinW’s Hamiltonian and anisotropy conventions. It does not optimize the spins. Incommensurate rotating frames, symbolic models, and rotated or multiple twins are not supported.</p>
+<p>Tested with MATLAB R2026a and <a href="https://github.com/SpinW/spinw/tree/dc06a4bec2c44bcfde6baa630ecb6329fb4b68ba">SpinW dc06a4b</a>. To generate the four tutorial examples and run the tests:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="va">addpath</span>(<span class="ss">&#39;exporters/spinw&#39;</span><span class="op">,</span> <span class="ss">&#39;exporters/spinw/examples&#39;</span><span class="op">,</span> <span class="ss">&#39;exporters/spinw/tests&#39;</span>)<span class="op">;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="va">generate_examples</span>(<span class="ss">&#39;data/magnons&#39;</span>)<span class="op">;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="va">test_export_magnons</span><span class="op">;</span></span></code></pre></div>
+<p><a href="../../doc/magnons/FORMAT.html">Format and conventions</a> · <a href="../../doc/magnons/VALIDATION.html">Validation</a></p>
+
+    </main>
+</body>
+</html>

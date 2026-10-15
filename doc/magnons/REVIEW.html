@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Magnon integration — Phonon website</title>
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/documentation.css">
+</head>
+<body>
+    <nav aria-label="Site"><ul class="navigation"><li><a href="../../index.html">Home</a></li><li><a href="../../phonon.html">Phonons</a></li><li><a href="../../magnon.html">Magnons</a></li><li><a href="../../exciton.html">Excitons</a></li><li><a href="../../structure.html">Structures</a></li></ul></nav>
+    <main class="documentation">
+        <nav class="documentation-links" aria-label="Magnon guides">
+            <a href="../../magnon.html">Back to magnon viewer</a>
+            <a href="../../doc/magnons/README.html">Viewer guide</a>
+            <a href="../../exporters/sunny/README.html">Sunny exporter</a>
+            <a href="../../exporters/spinw/README.html">SpinW exporter</a>
+            <a href="../../exporters/magnopy/README.html">Magnopy exporter</a>
+        </nav>
+        <h1 id="magnon-integration">Magnon integration</h1>
+<p>The magnon page reuses the site’s structure renderer, appearance controls, Highcharts dispersion selection, and movie tools. It adds spin arrows and tip paths. No solver runs in the browser and no browser dependency was added.</p>
+<h2 id="try-it">Try it</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> ci</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run build:site</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> http.server 8000 <span class="at">--directory</span> build</span></code></pre></div>
+<p>Open the <a href="../../magnon.html">magnon viewer</a>. Choose an example, click a branch, and try <strong>center on atom</strong> and <strong>tip path</strong>. FeI₂ includes SU(N) modes; Magnopy’s elliptic example shows unequal transverse amplitudes.</p>
+<h2 id="code-map">Code map</h2>
+<ul>
+<li><code>src/magnonjson.js</code>: shared file reader and spin motion.</li>
+<li><code>src/magnoncrystal.js</code>, <code>magnongeometry.js</code>: arrows and tip paths.</li>
+<li><code>src/magnonhighcharts.js</code>, <code>magnonwebpage.js</code>: chart and controls.</li>
+<li><code>exporters/</code>: independent Sunny, SpinW, and Magnopy adapters and tests.</li>
+</ul>
+<p><a href="FORMAT.html">JSON format</a> · <a href="VALIDATION.html">Validation</a></p>
+
+    </main>
+</body>
+</html>

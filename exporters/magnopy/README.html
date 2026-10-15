@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Magnopy exporter — Phonon website</title>
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/documentation.css">
+</head>
+<body>
+    <nav aria-label="Site"><ul class="navigation"><li><a href="../../index.html">Home</a></li><li><a href="../../phonon.html">Phonons</a></li><li><a href="../../magnon.html">Magnons</a></li><li><a href="../../exciton.html">Excitons</a></li><li><a href="../../structure.html">Structures</a></li></ul></nav>
+    <main class="documentation">
+        <nav class="documentation-links" aria-label="Magnon guides">
+            <a href="../../magnon.html">Back to magnon viewer</a>
+            <a href="../../doc/magnons/README.html">Viewer guide</a>
+            <a href="../../exporters/sunny/README.html">Sunny exporter</a>
+            <a href="../../exporters/spinw/README.html">SpinW exporter</a>
+            <a href="../../exporters/magnopy/README.html">Magnopy exporter</a>
+        </nav>
+        <h1 id="magnopy-exporter">Magnopy exporter</h1>
+<p>From the website repository root, install once:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pip install ./exporters/magnopy</span></code></pre></div>
+<p>Export from your existing Magnopy Hamiltonian, LSWT object, and sampled path:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> magnopy_magnon_export <span class="im">import</span> export_magnons</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>export_magnons(<span class="st">&quot;magnons.json&quot;</span>, spinham, lswt, qpoints, relative<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
+<p>Load the file in the <a href="../../magnon.html">magnon viewer</a>. <code>qpoints</code> is <strong>N × 3</strong>. Use <code>relative=True</code> for magnetic-cell reciprocal lattice units; the default, like Magnopy, is Cartesian reciprocal coordinates.</p>
+<p>To reuse already calculated modes without diagonalizing again:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># modes contains the native (omega, delta, G) result for each q, in meV.</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>export_magnons(<span class="st">&quot;magnons.json&quot;</span>, spinham, lswt, qpoints, relative<span class="op">=</span><span class="va">True</span>, modes<span class="op">=</span>modes)</span></code></pre></div>
+<p>Without <code>modes=</code>, the exporter calls Magnopy’s own <code>diagonalize</code> method. Pass the matching, unchanged <code>spinham</code> for atomic positions. Cell lengths are assumed to be Å; use <code>length_to_angstrom=10</code> for nm. Optional keywords include <code>name</code>, <code>repetitions</code>, <code>atom_types</code>, and <code>highsym_qpts=[[0, "Γ"], ...]</code>.</p>
+<p>Tested with Magnopy 0.6.1. Stable periodic modes are supported; invalid native modes, including some nonorthogonal results at exact degeneracies, are rejected without repair. All spin-wave calculations remain in Magnopy.</p>
+<p>Try the cubic FM, elliptic variant, and two-site AFM examples:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> exporters/magnopy/examples/export_examples.py</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pip install <span class="st">&#39;./exporters/magnopy[test]&#39;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pytest exporters/magnopy/tests <span class="at">-q</span></span></code></pre></div>
+<p><a href="../../doc/magnons/FORMAT.html">Format and conventions</a> · <a href="VALIDATION.html">Validation</a></p>
+
+    </main>
+</body>
+</html>
