@@ -9,9 +9,16 @@ end
 # Reconstruct a separate native observable from the exported vectors. This
 # checks phase interference, local frames, both sectors, and absolute weights.
 function check_native_observables(example)
-    (; swt, path, units) = example
+    (; sys, swt, path, units) = example
     data = magnon_data(swt, path; units)
     native = intensities_bands(swt, path)
+    # Independently request all Cartesian components from the native public
+    # measurement API. Trace-only checks cannot detect conjugated polarization.
+    # Rebuild from the original system: Sunny 0.7 stores already-rotated
+    # interactions in swt.sys, which must not be rotated a second time.
+    tensor_swt = SpinWaveTheory(sys; regularization=swt.regularization,
+        measure=ssf_custom((q, ssf) -> ssf, sys; apply_g=false))
+    tensors = intensities_bands(tensor_swt, path)
     original = Sunny.orig_crystal(swt.sys)
     ncells = length(swt.sys.crystal.positions) / length(original.positions)
     for (iq, q) in enumerate(path.qs)
@@ -21,6 +28,8 @@ function check_native_observables(example)
         # Contract the cell-periodic per-site mode with physical basis phases.
         phase = [cis(-dot(qcart, swt.sys.crystal.latvecs * r)) for r in swt.sys.crystal.positions]
         reconstructed = [sum(abs2, decoded_mode(data, iq, b) * phase) / ncells for b in eachindex(order)]
+        amplitudes = [decoded_mode(data, iq, b) * phase for b in eachindex(order)]
+        tensor_order = sortperm(tensors.disp[:, iq])
         # Degenerate bases can rotate between eigensolver calls: sum all bands
         # with equal energies before comparing invariant spectral weights.
         unused = trues(length(order))
@@ -29,6 +38,8 @@ function check_native_observables(example)
             group = findall(j -> isapprox(data["energies"][iq][j], data["energies"][iq][b]; atol=1e-7, rtol=1e-7), eachindex(order))
             unused[group] .= false
             @test isapprox(sum(reconstructed[group]), sum(native.data[order[group], iq]); rtol=1e-6, atol=1e-7)
+            expected_tensor = sum(amplitudes[j] * amplitudes[j]' for j in group) / ncells
+            @test isapprox(expected_tensor, sum(tensors.data[tensor_order[group], iq]); rtol=1e-6, atol=1e-7)
         end
         Bexport = 2π * inv(hcat(data["lattice"]...))'
         @test Bexport * data["qpoints"][iq] ≈ qcart .* units.angstrom
@@ -88,7 +99,7 @@ end
         set_dipole!(sys, [0,0,1], (1,1,1,1))
         swt = SpinWaveTheory(sys; measure=ssf_trace(sys; apply_g=false))
         path = q_space_path(cryst, [[0,0,0],[0.25,0,0]], 3)
-        data = check_native_observables((; swt, path, units=Units(:meV,:angstrom)))
+        data = check_native_observables((; sys, swt, path, units=Units(:meV,:angstrom)))
         @test data["energies"][1] ≈ [0.5, 2.25] atol=1e-7
         @test norm(decoded_mode(data, 1, 1)) < 1e-12
         @test norm(decoded_mode(data, 1, 2)) ≈ 1
@@ -101,7 +112,7 @@ end
         polarize_spins!(sys, z)
         swt = SpinWaveTheory(sys; measure=ssf_trace(sys; apply_g=false))
         path = q_space_path(cryst, [[0,0,-1/4],[0,0,1/4]], 3)
-        data = check_native_observables((; swt, path, units=Units(:meV,:angstrom)))
+        data = check_native_observables((; sys, swt, path, units=Units(:meV,:angstrom)))
         @test only(data["energies"][1]) ≈ 2.4 atol=1e-7
         @test only(data["energies"][3]) ≈ 3.6 atol=1e-7
         @test data["qpoints"][1] ≈ [0,0,-1/4]
@@ -113,7 +124,7 @@ end
         polarize_spins!(sys, [0,0,1])
         swt = SpinWaveTheory(sys; measure=ssf_trace(sys; apply_g=false))
         path = q_space_path(cryst, [[0,0,0],[1/4,0,0]], 3)
-        data = check_native_observables((; swt, path, units=Units(:meV,:angstrom)))
+        data = check_native_observables((; sys, swt, path, units=Units(:meV,:angstrom)))
         @test only(data["energies"][1]) ≈ sqrt(4*5) atol=1e-7
         d = decoded_mode(data, 1, 1)[:,1]
         @test abs(d[2]/d[1]) ≈ sqrt(5/4) atol=1e-7

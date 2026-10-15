@@ -113,6 +113,10 @@ atomic positions in the Structure panel describe the exported magnetic cell.
 
 ## Examples and validation
 
+See the [executed validation record](VALIDATION.md) for numerical results,
+clean-install checks, browser checks, and remaining limitations. The
+[review guide](REVIEW.md) gives a short demo and code map.
+
 The initial example collection covers the ferromagnetic and antiferromagnetic
 chain tutorials, CoRh₂O₄, FeI₂ in SU(N) mode, and the long-range dipole tutorial.
 Generation scripts and solver tests live with the exporters. Saved JSON files

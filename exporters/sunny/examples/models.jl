@@ -12,7 +12,7 @@ function chain_example(; afm=false, samples=81)
     end
     path = q_space_path(cryst, [[0, 0, 0], [1/2, 0, 0], [1, 0, 0]], samples; labels=["Γ", "X", "Γ"])
     swt = SpinWaveTheory(sys; measure=ssf_trace(sys; apply_g=false))
-    return (; swt, path, units=Units(:meV, :angstrom), repetitions=(8, 1, 1),
+    return (; sys, swt, path, units=Units(:meV, :angstrom), repetitions=(8, 1, 1),
             name=afm ? "Sunny · SW02 antiferromagnetic chain" : "Sunny · SW01 ferromagnetic chain",
             source_url="https://sunnysuite.github.io/Sunny.jl/stable/examples/spinw/" * (afm ? "SW02_AFM_Heisenberg_chain.html" : "SW01_FM_Heisenberg_chain.html"))
 end
@@ -29,7 +29,7 @@ function corh2o4_example(; samples=81)
     path = q_space_path(cryst, [[0,0,0], [1/2,0,0], [1/2,1/2,0], [0,0,0]], samples;
                         labels=["Γ", "(½,0,0)", "(½,½,0)", "Γ"])
     swt = SpinWaveTheory(sys; measure=ssf_trace(sys; apply_g=false))
-    return (; swt, path, units=Units(:meV, :angstrom), repetitions=(2, 2, 2), name="Sunny · CoRh₂O₄",
+    return (; sys, swt, path, units=Units(:meV, :angstrom), repetitions=(2, 2, 2), name="Sunny · CoRh₂O₄",
             source_url="https://sunnysuite.github.io/Sunny.jl/stable/examples/01_LSWT_CoRh2O4.html")
 end
 
@@ -45,7 +45,7 @@ function dipole_example(; samples=101)
     qs = [[0,0,0], [0,1,0], [1,1/2,0], [1/2,1/2,1/2], [3/4,3/4,0], [0,0,0]]
     path = q_space_path(cryst, qs, samples; labels=["Γ", "X", "W", "L", "K", "Γ"])
     swt = SpinWaveTheory(sys; measure=ssf_trace(sys; apply_g=false))
-    return (; swt, path, units, repetitions=(2, 2, 2), name="Sunny · long-range dipoles (Ewald)",
+    return (; sys, swt, path, units, repetitions=(2, 2, 2), name="Sunny · long-range dipoles (Ewald)",
             source_url="https://sunnysuite.github.io/Sunny.jl/stable/examples/07_Dipole_Dipole.html")
 end
 
@@ -74,7 +74,7 @@ function fei2_example(; samples=101)
     minimize_energy!(sys)
     path = q_space_path(cryst, [[0,0,0], [1,0,0], [0,1,0], [1/2,0,0], [0,1,0], [0,0,0]], samples)
     swt = SpinWaveTheory(sys; measure=ssf_trace(sys; apply_g=false))
-    return (; swt, path, units=Units(:meV, :angstrom), repetitions=(3, 2, 1), name="Sunny · FeI₂ SU(3)",
+    return (; sys, swt, path, units=Units(:meV, :angstrom), repetitions=(3, 2, 1), name="Sunny · FeI₂ SU(3)",
             source_url="https://sunnysuite.github.io/Sunny.jl/stable/examples/03_LSWT_SU3_FeI2.html")
 end
 

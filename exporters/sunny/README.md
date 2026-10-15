@@ -164,14 +164,18 @@ states. The pyrochlore site's `Gd` label is descriptive of the tutorial's spin
 7/2 model, not a claim to include a full chemical structure.
 
 For **every** example the tests compare exported bands against the native
-solver and reconstruct Sunny's bare-spin dynamical structure factor from the
-exported complex vectors and atomic positions. Degenerate modes are compared
+solver and reconstruct Sunny's full complex 3×3 bare-spin correlation tensor
+and its trace from the exported complex vectors and atomic positions. Degenerate modes are compared
 through summed spectral weights. This tests relative phase, amplitudes, units,
 and magnetic-cell conversion. A separate analytic SU(3) single-ion test ensures
 a zero-dipole quadrupolar mode is retained without inventing spin motion.
 The Python check compares common FM/AFM q samples against the independently
 generated SpinW fixtures: energies and rotationally invariant summed spin-mode
 weights agree, allowing for the two solvers' small Goldstone regularizations.
+The JavaScript cross-exporter test additionally aligns the global spin axes and
+canonical momenta and compares the full site-by-Cartesian spectral covariance.
+This retains relative site phases and chiral polarization while allowing
+arbitrary mode phases and mixing within a degenerate subspace.
 
 ### Compatibility boundary
 

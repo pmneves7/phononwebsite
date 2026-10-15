@@ -37,6 +37,23 @@ function spectralInvariants(modes) {
   return { trace, squaredTrace };
 }
 
+// Full site-by-Cartesian covariance retains relative site phases and chiral
+// polarization, while removing arbitrary overall mode phases and degenerate
+// basis rotations. SpinW's +y order is rotated to Sunny's +z with Rx(+π/2).
+function spectralCovariance(modes, rotate = false) {
+  const columns = modes.map((sites) => sites.flatMap(([x, y, z]) =>
+    rotate ? [x, z.map((v) => -v), y] : [x, y, z]));
+  return columns[0].flatMap((_, i) => columns[0].map((_, j) => {
+    let re = 0, im = 0;
+    for (const column of columns) {
+      const [a, b] = column[i], [c, d] = column[j];
+      re += a * c + b * d;
+      im += b * c - a * d;
+    }
+    return [re, im];
+  }));
+}
+
 describe('Sunny and SpinW chain exports', () => {
   for (const afm of [false, true]) {
     it(`${afm ? 'AFM' : 'FM'} preserves analytic spectra and dipole weights across solver conventions`, () => {
@@ -79,6 +96,18 @@ describe('Sunny and SpinW chain exports', () => {
         }
         close(sunnyWeight.trace, spinwWeight.trace, 'Cross-solver dipole weight');
         close(sunnyWeight.squaredTrace, spinwWeight.squaredTrace, 'Cross-solver spectral covariance');
+
+        // Compare at the SAME canonical momentum, accounting for the native
+        // SpinW sign. Cell-periodic modes repeat under integer magnetic-cell
+        // reciprocal shifts. No complex conjugation or fitted site phases.
+        const sameQ = spinw.qpoints.findIndex((other) =>
+          Math.abs((other[0] - sunny.qpoints[sunnyIndex][0]) -
+            Math.round(other[0] - sunny.qpoints[sunnyIndex][0])) < 1e-10);
+        assert.ok(sameQ >= 0, 'Matching canonical momentum');
+        const a = spectralCovariance(sunny.vectors[sunnyIndex]);
+        const b = spectralCovariance(spinw.vectors[sameQ], true);
+        a.forEach((pair, index) => pair.forEach((value, component) =>
+          close(value, b[index][component], 'Full site/Cartesian covariance')));
       }
       assert.ok(comparisons >= 3, 'Need several common nonzero-energy wavevectors');
     });
