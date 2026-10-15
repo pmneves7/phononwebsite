@@ -94,6 +94,21 @@ The Magnopy adapter translates native `LSWT.diagonalize` transformations using
 Magnopy's local spin frames; it accepts precomputed results and adds no solver.
 Each adapter's README specifies its supported versions and native conventions.
 
+For adapter maintenance, the Cartesian amplitudes are:
+
+| Solver | Native mode → Cartesian spin |
+| --- | --- |
+| Sunny dipole | `sqrt(S/2) R (u+v, i(v−u), 0)` using Sunny's local frame |
+| Sunny SU(N) | `dᵃ = Σf [Oᵃ[N,f] u_f + Oᵃ[f,N] v_f]`; local ground state is component N |
+| SpinW | `sqrt(S/2) [conj(z) u + z v]`, with `z=e1+i e2`; export `q=−diag(N_ext) qmat q_input` |
+| Magnopy | `sqrt(S/2) [conj(p) conj(G[n,i]) − p conj(G[n,M+i])]`, with `p=x+i y`; G contains mode rows |
+
+Sunny q points refer to the original crystal and are converted to the magnetic
+cell. Magnopy reduced q points already refer to the exported cell. All three
+native mode bases are cell-periodic, so no atomic-position phase is added.
+SpinW requests `saveV=true, sortMode=false` to keep energies and vectors paired.
+Sunny's internal-frame dependency is isolated in `sunny_adapter.jl`.
+
 Version 1 does not encode multiple domains, incommensurate rotating frames,
 complex unstable energies, damping, thermal trajectories, or higher multipole
 operators. Such data require an explicit extension rather than reinterpretation

@@ -90,8 +90,17 @@ describe('Build smoke tests', () => {
 
     const viewer = document('magnon.html');
     const guideLink = [...viewer.querySelectorAll('a[href]')].find(a => a.textContent === 'Export guide');
-    assert.equal(guideLink?.getAttribute('href'), 'doc/magnons/README.html#export-a-calculation');
+    assert.equal(guideLink?.getAttribute('href'), 'index.html#magnons');
     checkLink('magnon.html', guideLink.getAttribute('href'));
+    const home = document('index.html');
+    assert.equal(home.querySelector('a[href="magnon.html"]:not(.navigation a)')?.textContent, 'magnon viewer');
+    const headings = [...home.querySelectorAll('h1, h2, h3')].map(el => el.textContent);
+    assert.ok(headings.indexOf('Magnons') > headings.indexOf('VASP'));
+    assert.ok(headings.indexOf('Magnons') < headings.indexOf('Pages using this visualization tool'));
+    for (const call of ['using Sunny, SunnyMagnonExport', "addpath('/path/to/phononwebsite/exporters/spinw')", 'from magnopy_magnon_export import export_magnons']) {
+      assert.ok(home.textContent.includes(call), `Missing homepage export recipe: ${call}`);
+    }
+
 
     for (const solver of ['sunny', 'spinw', 'magnopy']) {
       const guide = document(`exporters/${solver}/README.html`);
@@ -107,7 +116,7 @@ describe('Build smoke tests', () => {
     }
     const homeLinks = [...document('index.html').querySelectorAll('a[href]')]
       .filter(link => /^(doc\/magnons|exporters\/(sunny|spinw|magnopy))\//.test(link.getAttribute('href')));
-    assert.ok(homeLinks.length >= 4, 'Homepage must link to the magnon and all three exporter guides');
+    assert.ok(homeLinks.length >= 3, 'Homepage must link to all three exporter guides');
     for (const link of homeLinks) {
       assert.match(link.getAttribute('href'), /\.html(?:[?#]|$)/);
       checkLink('index.html', link.getAttribute('href'));
